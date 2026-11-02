@@ -1,67 +1,80 @@
 # RAG Knowledge Chat
 
-Knowledge Chat com RAG usando Python, LangChain (v1) e Postgres com pgvector.
+A Knowledge Chat with RAG built with Python, LangChain (v1) and Postgres with pgvector.
 
-O projeto implementa um pipeline completo de RAG em módulos pequenos e independentes:
-ingestão e chunking de documentos Markdown, indexação vetorial no Postgres,
-**query planner** (o modelo interpreta a pergunta e planeja a busca antes do retrieval),
-busca vetorial filtrada por metadados e resposta com fontes. A base de exemplo é a
-documentação interna de uma empresa SaaS fictícia (FCAI), mas a estrutura serve para
-qualquer base de documentos Markdown com metadados.
+> This repository is an English copy of
+> [devfullcycle/mba-ia-rag](https://github.com/devfullcycle/mba-ia-rag) (open-source
+> MBA course material), with the code, knowledge base and documentation translated to
+> English and an added [design doc](docs/design-doc.md) and
+> [Architecture Decision Records](docs/adr/README.md).
 
-## Como funciona
+The project implements a complete RAG pipeline in small, independent modules: ingestion
+and chunking of Markdown documents, vector indexing in Postgres, a **query planner**
+(the model interprets the question and plans the search before retrieval),
+metadata-filtered vector search and answers with sources. The sample base is the
+internal documentation of a fictitious SaaS company (FCAI), but the structure works for
+any base of Markdown documents with metadata.
 
-Fluxo de uma pergunta no chat:
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [docs/design-doc.md](docs/design-doc.md) | How each RAG concept is structured in the code: chunks with metadata, chunk versioning, answers with sources/refusal/debug, question rewriting, query planner, reranking, manifest + hash + idempotent reindexing, and the approval flow |
+| [docs/adr/](docs/adr/README.md) | The Architecture Decision Records behind those designs |
+
+## How it works
+
+Flow of a question in the chat:
 
 ```
-pergunta do usuário
+user question
    │
    ▼
-query planner (modelo, structured output)
-   │        └── pergunta ambígua? → devolve uma pergunta de esclarecimento e para
+query planner (model, structured output)
+   │        └── ambiguous question? → returns a clarification question and stops
    ▼
-busca vetorial no pgvector
-   (pergunta normalizada + termos exatos, com filtros de metadados)
+vector search in pgvector
+   (normalized question + exact terms, with metadata filters)
    │
    ▼
-reranking (modelo, structured output)
-   │        └── nenhum chunk sustenta a resposta? → responde "não encontrei" e para
+reranking (model, structured output)
+   │        └── no chunk supports the answer? → answers "not found" and stops
    ▼
-modelo de resposta (structured output)
+answer model (structured output)
    │
    ▼
-Answer + Sources (as fontes são montadas pela aplicação, não pelo modelo)
+Answer + Sources (sources are built by the application, not by the model)
 ```
 
-O modelo de chat é chamado em exatamente três pontos: no query planner, no reranking e
-na resposta final. Ingestão e indexação não chamam o modelo de chat — apenas o modelo
-de embeddings.
+The chat model is called at exactly three points: in the query planner, in the
+reranking step and in the final answer. Ingestion and indexing never call the chat
+model — only the embedding model.
 
-Esse fluxo vive em `app/rag_pipeline.py` e é o mesmo nos dois modos de uso: o chat de
-terminal (`app/rag_chat.py`) e a API HTTP (`app/api.py`).
+This flow lives in `app/rag_pipeline.py` and is the same in both usage modes: the
+terminal chat (`app/rag_chat.py`) and the HTTP API (`app/api.py`).
 
-## Requisitos
+## Requirements
 
 - Python 3.11+
-- Docker e Docker Compose
-- Uma chave de API da OpenAI
+- Docker and Docker Compose
+- An OpenAI API key
 
 ## Setup
 
-1. Crie o `.env` a partir do exemplo e preencha `OPENAI_API_KEY` (o exemplo já traz
-   modelo de chat, modelo de embeddings e URL do banco):
+1. Create `.env` from the example and fill in `OPENAI_API_KEY` (the example already
+   includes the chat model, the embedding model and the database URL):
 
    ```bash
    cp .env.example .env
    ```
 
-2. Suba o Postgres com pgvector:
+2. Start Postgres with pgvector:
 
    ```bash
    docker compose up -d
    ```
 
-3. Crie o ambiente virtual e instale as dependências:
+3. Create the virtual environment and install the dependencies:
 
    ```bash
    python3 -m venv .venv
@@ -69,104 +82,108 @@ terminal (`app/rag_chat.py`) e a API HTTP (`app/api.py`).
    pip install -r requirements.txt
    ```
 
-4. Valide ambiente, conexão e extensão pgvector:
+4. Validate the environment, the connection and the pgvector extension:
 
    ```bash
    python -m app.main
    ```
 
-## Preparando a base
+## Preparing the base
 
 ```bash
-python -m app.ingest   # lê, valida e gera os chunks (data/chunks.jsonl)
-python -m app.index    # gera embeddings e indexa no pgvector
+python -m app.ingest   # reads, validates and generates the chunks (data/chunks.jsonl)
+python -m app.index    # generates embeddings and indexes them into pgvector
 ```
 
-O `ingest` valida o front matter de cada documento (metadados obrigatórios: `title`,
-`tenant`, `product`, `plan`, `doc_type`, `version`, `status`, `visibility`) e falha com
-erro claro quando algo está faltando. O chunking preserva a estrutura do Markdown
-(`MarkdownHeaderTextSplitter` por seções, depois `RecursiveCharacterTextSplitter` com
-`chunk_size=900` e `chunk_overlap=150`), e cada chunk carrega os metadados do documento
-mais os seus próprios (`chunk_id`, `source_file`, `chunk_index`, `section`,
+`ingest` validates the front matter of every document (required metadata: `title`,
+`tenant`, `product`, `plan`, `doc_type`, `version`, `status`, `visibility`) and fails
+with a clear error when something is missing. Chunking preserves the Markdown structure
+(`MarkdownHeaderTextSplitter` by sections, then `RecursiveCharacterTextSplitter` with
+`chunk_size=900` and `chunk_overlap=150`), and every chunk carries the document
+metadata plus its own (`chunk_id`, `source_file`, `chunk_index`, `section`,
 `content_length`, `document_hash`).
 
-Cada chunk é prefixado com um **cabeçalho de contexto** (título, tipo, produto, plano,
-versão e seção) antes de ser indexado. Metadados não entram no embedding — só no filtro
-— então é esse cabeçalho que torna um chunk tirado do meio de um documento
-autoexplicativo para a busca e para o prompt final. A flag `--no-context-header` gera
-os chunks sem o cabeçalho, útil para comparar a qualidade do retrieval com e sem ele.
+Every chunk is prefixed with a **context header** (title, type, product, plan, version
+and section) before it is indexed. Metadata does not reach the embedding — only the
+filter — so this header is what makes a chunk taken from the middle of a document
+self-explanatory for the search and for the final prompt. The `--no-context-header`
+flag generates the chunks without the header, useful to compare retrieval quality with
+and without it.
 
-O `index` grava os chunks na tabela `fcai_knowledge_base` usando `chunk_id` como id
-(`PGEngine` + `PGVectorStore`, API atual do `langchain-postgres`) e reindexa **apenas o
-que mudou** desde a última execução — veja a seção a seguir.
+`index` writes the chunks to the `fcai_knowledge_base` table using `chunk_id` as the id
+(`PGEngine` + `PGVectorStore`, the current `langchain-postgres` API) and reindexes
+**only what changed** since the last run — see the next section.
 
 ## Incremental indexing
 
-O índice do pgvector se mantém consistente quando documentos mudam, sem nunca
-reindexar tudo:
+The pgvector index stays consistent when documents change, without ever reindexing
+everything:
 
-- `python -m app.ingest` gera `data/chunks.jsonl` com um `document_hash` (SHA256 do
-  arquivo completo, front matter incluído) em cada chunk. O `chunk_id` é
-  **determinístico** — `arquivo` + prefixo do hash + posição, ex.:
-  `product-support-sla-8f3a91c2b4d0-0001` — então o mesmo conteúdo sempre produz os
-  mesmos ids, e um documento editado produz ids novos.
-- `python -m app.index` compara os chunks atuais com o manifest da última indexação
-  (`data/index_manifest.json`) e classifica cada documento:
+- `python -m app.ingest` generates `data/chunks.jsonl` with a `document_hash` (SHA256
+  of the complete file, front matter included) in every chunk. The `chunk_id` is
+  **deterministic** — `file` + hash prefix + position, e.g.
+  `product-support-sla-8f3a91c2b4d0-0001` — so the same content always produces the
+  same ids, and an edited document produces new ids.
+- `python -m app.index` compares the current chunks with the manifest of the last
+  indexing run (`data/index_manifest.json`) and classifies each document:
 
-  | Estado | Ação |
+  | State | Action |
   |---|---|
-  | `new` | indexa os chunks do documento |
-  | `changed` | deleta os chunks antigos (ids do manifest) e indexa os novos |
-  | `removed` | deleta os chunks antigos do índice |
-  | `unchanged` | não faz nada (nenhuma chamada de embedding) |
+  | `new` | indexes the document's chunks |
+  | `changed` | deletes the old chunks (ids from the manifest) and indexes the new ones |
+  | `removed` | deletes the old chunks from the index |
+  | `unchanged` | does nothing (no embedding calls) |
 
-- Ao final, o manifest é regravado com o estado atual (hash, metadados e `chunk_ids`
-  por documento). Rodar `index` duas vezes seguidas não duplica nada e não gasta
-  embeddings; alterar um documento substitui só os chunks dele; remover um documento
-  (e rodar `ingest` + `index`) limpa os chunks órfãos do índice.
-- `python -m app.index --force` deleta todos os chunks registrados no manifest e
-  reindexa todos os chunks atuais, recriando o índice do zero.
-- Sem manifest (primeira indexação) a tabela é recriada do zero, pois não há como
-  saber o que existe nela.
-- O chat **nunca** reindexa documentos em runtime: indexação acontece só via
+- At the end, the manifest is rewritten with the current state (hash, metadata and
+  `chunk_ids` per document). Running `index` twice in a row duplicates nothing and
+  spends no embeddings; changing a document replaces only its chunks; removing a
+  document (and running `ingest` + `index`) cleans its orphan chunks from the index.
+- `python -m app.index --force` deletes every chunk registered in the manifest and
+  reindexes all current chunks, rebuilding the index from scratch.
+- Without a manifest (first indexing run) the table is recreated from scratch, since
+  there is no way to know what it contains.
+- The chat **never** reindexes documents at runtime: indexing only happens through
   `app.ingest` + `app.index`.
 
-## Usando o chat
+## Using the chat
 
 ```bash
-python -m app.rag_chat                # o chat com RAG
-python -m app.rag_chat --debug        # imprime o QueryPlan, os chunks recuperados e os selecionados
-python -m app.rag_chat --show-prompt  # imprime os prompts do planner, do reranker e da resposta
-python -m app.rag_chat --no-rerank    # pula o reranking (usa os 4 primeiros do retrieval)
+python -m app.rag_chat                # the RAG chat
+python -m app.rag_chat --debug        # prints the QueryPlan, the retrieved chunks and the selected ones
+python -m app.rag_chat --show-prompt  # prints the planner, reranker and answer prompts
+python -m app.rag_chat --no-rerank    # skips reranking (uses the top 4 from retrieval)
 ```
 
-Digite `exit` ou `quit` para sair.
+Type `exit` or `quit` to leave.
 
-O modelo de resposta retorna saída estruturada (`answer`, `has_answer`,
-`used_chunk_ids`) e é instruído a responder **somente com base no contexto
-recuperado**. As **fontes não são escritas pelo modelo**: a aplicação as monta cruzando
-os `used_chunk_ids` com os metadados dos chunks realmente recuperados (`source_file`,
-`title`, `section`, `version`) — IDs inventados são descartados. Quando o contexto não
-sustenta a resposta, o chat diz que não há informação suficiente e imprime
+The answer model returns structured output (`answer`, `has_answer`, `used_chunk_ids`)
+and is instructed to answer **only based on the retrieved context**. **Sources are not
+written by the model**: the application builds them by joining the `used_chunk_ids`
+with the metadata of the chunks that were really retrieved (`source_file`, `title`,
+`section`, `version`) — invented ids are discarded. When the context does not support
+the answer, the chat says there is not enough information and prints
 `Sources: No sources.`.
 
-Perguntas para ver o planner trabalhando (com `--debug`):
+Questions to watch the planner at work (with `--debug`):
 
-- E se der problema grave no Enterprise? → normaliza para P1 + SLA, `plan=enterprise`
-- Como funciona o suporte no plano da empresa? → ambígua, pede esclarecimento
-- Qual é o e-mail de suporte? → `doc_types` inclui `sla` (o e-mail mora no doc de SLA)
-- O que acontece se eu ultrapassar a cota de ingestão? → `plan=null`, resposta cobre os três planos
+- What if something serious breaks on Enterprise? → normalizes to P1 + SLA,
+  `plan=enterprise`
+- How does support work on the company plan? → ambiguous, asks for clarification
+- What is the support e-mail? → `doc_types` includes `sla` (the e-mail lives in the SLA
+  doc)
+- What happens if I exceed the ingestion quota? → `plan=null`, the answer covers all
+  three plans
 
 ## API
 
-O mesmo pipeline do terminal é exposto como uma API HTTP com FastAPI:
+The same pipeline as the terminal is exposed as an HTTP API with FastAPI:
 
 ```bash
 uvicorn app.api:app --reload
 ```
 
-A API **não roda ingestão nem indexação** — o `/chat` apenas consulta o índice já
-criado no Postgres. Antes de usá-la, prepare a base:
+The API **does not run ingestion or indexing** — `/chat` only queries the index already
+created in Postgres. Before using it, prepare the base:
 
 ```bash
 python -m app.ingest
@@ -176,228 +193,232 @@ python -m app.index
 Endpoints:
 
 - `GET /health` → `{"status": "ok"}`
-- `POST /chat` → executa o pipeline completo (planner → retrieval → reranking → resposta)
+- `POST /chat` → runs the full pipeline (planner → retrieval → reranking → answer)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/chat \
   -H 'Content-Type: application/json' \
-  -d '{"question": "Qual é o SLA para incidentes P1 no plano Enterprise?"}'
+  -d '{"question": "What is the SLA for P1 incidents on the Enterprise plan?"}'
 ```
 
-Campos opcionais do request: `debug` (default `false`) inclui na resposta o query plan,
-os chunks recuperados e os `selected_chunk_ids`; `use_rerank` (default `true`) permite
-pular o reranking. Pergunta vazia retorna `400`; pergunta ambígua retorna a pergunta de
-esclarecimento com `needs_clarification=true`. As fontes são montadas pela aplicação,
-nunca pelo modelo, e a API não expõe prompts nem segredos.
+Optional request fields: `debug` (default `false`) includes the query plan, the
+retrieved chunks and the `selected_chunk_ids` in the response; `use_rerank` (default
+`true`) allows skipping the reranking step. An empty question returns `400`; an
+ambiguous question returns the clarification question with `needs_clarification=true`.
+Sources are built by the application, never by the model, and the API exposes neither
+prompts nor secrets.
 
-O arquivo `test.http` na raiz tem todos esses requests prontos para a extensão
-**REST Client** do VS Code.
+The `test.http` file at the root has all these requests ready for the VS Code
+**REST Client** extension.
 
 ## Pipeline observability
 
-Cada execução do pipeline gera um `request_id` (UUID), mede o tempo de cada etapa
+Every pipeline run generates a `request_id` (UUID), measures the time of each step
 (`query_planning_ms`, `retrieval_ms`, `reranking_ms`, `answer_generation_ms`,
-`total_ms`) e agrega os tokens consumidos por modelo (`model_usage`, via
-`UsageMetadataCallbackHandler` do LangChain — o custo não é calculado porque o
-LangChain não fornece preços, apenas tokens).
+`total_ms`) and aggregates the tokens consumed per model (`model_usage`, via
+LangChain's `UsageMetadataCallbackHandler` — cost is not calculated because LangChain
+provides tokens, not prices).
 
-- **Na API**, `debug=true` retorna as informações de diagnóstico: `request_id`,
-  `query_plan`, `retrieved_chunks`, `selected_chunk_ids`, `timings` e
-  `model_usage`. Com `debug=false` a resposta continua enxuta, sem nada disso.
-- **No terminal**, `--debug` mostra o query plan, os chunks recuperados, os
-  selecionados e um bloco `Pipeline debug` com o `request_id`, os tempos e os
-  tokens por modelo.
-- **Logs estruturados**: toda execução emite uma linha JSON no stdout com
-  `request_id`, `has_answer`, `needs_clarification`, `used_rerank`, contagens de
-  chunks, `source_files`, `timings` e `model_usage` (tokens por modelo) — o
-  suficiente para auditar o pipeline **sem**
-  expor prompts, contexto completo, documentos ou credenciais. Em caso de erro, a
-  linha traz `error_type` e `error_message`, e a API responde `500` com uma mensagem
-  genérica (sem stack trace).
-- Ingestão e indexação continuam separadas do runtime: observabilidade não muda o
-  fato de que o chat e a API apenas consultam o índice existente.
+- **In the API**, `debug=true` returns the diagnostic information: `request_id`,
+  `query_plan`, `retrieved_chunks`, `selected_chunk_ids`, `timings` and `model_usage`.
+  With `debug=false` the response stays lean, with none of that.
+- **In the terminal**, `--debug` shows the query plan, the retrieved chunks, the
+  selected ones and a `Pipeline debug` block with the `request_id`, the timings and the
+  tokens per model.
+- **Structured logs**: every run emits one JSON line on stdout with `request_id`,
+  `has_answer`, `needs_clarification`, `used_rerank`, chunk counts, `source_files`,
+  `timings` and `model_usage` (tokens per model) — enough to audit the pipeline
+  **without** exposing prompts, full context, documents or credentials. On error, the
+  line carries `error_type` and `error_message`, and the API responds `500` with a
+  generic message (no stack trace).
+- Ingestion and indexing remain separate from the runtime: observability does not
+  change the fact that the chat and the API only query the existing index.
 
-## O query planner
+## The query planner
 
-A pergunta que o usuário digita quase nunca é a melhor pergunta para buscar no banco.
-Antes do retrieval, o chat faz uma chamada ao modelo com structured output
-(`QueryPlan`, em `app/query_planner.py`) que interpreta a pergunta e planeja a busca.
-Cada campo do plano tem um efeito concreto:
+The question the user types is almost never the best question to search the database
+with. Before retrieval, the chat calls the model with structured output (`QueryPlan`,
+in `app/query_planner.py`), which interprets the question and plans the search. Each
+field of the plan has a concrete effect:
 
-| Campo | O que ele faz |
+| Field | What it does |
 | --- | --- |
-| `normalized_question` | reescrita autoexplicativa da pergunta; é o texto da busca semântica |
-| `exact_terms` | literais (P1, SSO, 99,9%…) anexados ao texto da busca, para o embedding não perdê-los |
-| `doc_types` | vira filtro `doc_type IN (...)` |
-| `plan` | vira filtro `plan IN [plano, "all"]` |
-| `needs_clarification` | interrompe o fluxo antes do retrieval e devolve uma pergunta de esclarecimento |
+| `normalized_question` | self-contained rewrite of the question; it is the text of the semantic search |
+| `exact_terms` | literals (P1, SSO, 99.9%…) appended to the search text, so the embedding does not lose them |
+| `doc_types` | becomes the filter `doc_type IN (...)` |
+| `plan` | becomes the filter `plan IN [plan, "all"]` |
+| `needs_clarification` | stops the flow before retrieval and returns a clarification question |
 
-A pergunta original continua sendo a que o modelo final responde — a normalizada serve
-só para buscar.
+The original question is still the one the final model answers — the normalized one is
+only used for searching.
 
-### Filtros: o que é do modelo e o que é da aplicação
+### Filters: what belongs to the model and what belongs to the application
 
-O modelo **só sugere filtros de conteúdo** (`doc_types` e `plan`). Os filtros seguros
-são fixos na aplicação e o modelo nunca decide sobre eles:
+The model **only suggests content filters** (`doc_types` and `plan`). The safe filters
+are fixed in the application and the model never decides on them:
 
 ```python
 SAFE_FILTERS = {"tenant": "fcai", "product": "fcai-cloud", "status": "published"}
 ```
 
-Tenant, produto, status e autorização são responsabilidade da aplicação — deixar o
-modelo escolher isso seria abrir mão do controle de acesso.
+Tenant, product, status and authorization are the application's responsibility —
+letting the model choose them would mean giving up access control.
 
-### O filtro é eliminatório: `doc_types` é uma lista generosa
+### The filter is eliminatory: `doc_types` is a generous list
 
-O filtro de metadados roda **antes** da busca semântica, como um `WHERE`: o que não
-passa nele não pode ser recuperado, nem que contenha exatamente a resposta. Como o
-filtro vem de um palpite do modelo, ele precisa ser generoso — o planner lista **todos**
-os tipos que podem conter a resposta, não um único:
+The metadata filter runs **before** the semantic search, like a `WHERE`: whatever does
+not pass it cannot be retrieved, even if it contains exactly the answer. Since the
+filter comes from a guess by the model, it needs to be generous — the planner lists
+**every** type that might contain the answer, not a single one:
 
-| Pergunta | `doc_types` | Onde a resposta mora |
+| Question | `doc_types` | Where the answer lives |
 | --- | --- | --- |
-| Quanto custa o plano Pro? | `plan`, `policy` | seção de preço do `pro-plan.md` |
-| O Enterprise tem SSO e SCIM? | `plan`, `product` | `enterprise-plan.md` |
-| Tempo de resposta P1 no Enterprise? | `plan`, `sla` | `enterprise-plan.md` + `product-support-sla.md` |
+| How much does the Pro plan cost? | `plan`, `policy` | price section of `pro-plan.md` |
+| Does Enterprise have SSO and SCIM? | `plan`, `product` | `enterprise-plan.md` |
+| P1 response time on Enterprise? | `plan`, `sla` | `enterprise-plan.md` + `product-support-sla.md` |
 
-Quando não dá para saber, a lista fica vazia e **nenhum filtro de tipo é aplicado**.
-Filtro aumenta a precisão e derruba o recall; na dúvida, é melhor buscar em tudo.
+When it is impossible to know, the list stays empty and **no type filter is applied**.
+Filters increase precision and lower recall; when in doubt, it is better to search
+everything.
 
-Pelo mesmo motivo, o catálogo de tipos no prompt do planner descreve o que cada tipo
-**realmente contém**, não o que o nome sugere — `sla` também cobre canais de
-atendimento e janelas de manutenção; `company` também cobre os e-mails de contato de
-todos os departamentos. O planner só enxerga a base por esse catálogo.
+For the same reason, the type catalog in the planner prompt describes what each type
+**really contains**, not what the name suggests — `sla` also covers support channels
+and maintenance windows; `company` also covers the contact e-mails of every department.
+The planner only sees the base through this catalog.
 
-### Quando o planner pede esclarecimento
+### When the planner asks for clarification
 
-Só quando a pergunta tem mais de uma leitura razoável, cada uma levando a uma resposta
-diferente. Dois casos que parecem iguais são tratados de forma diferente:
+Only when the question has more than one reasonable reading, each leading to a
+different answer. Two cases that look alike are handled differently:
 
-- pergunta que **aponta para um plano específico sem nomear** ("o meu plano", "o plano
-  da empresa") → ambígua: pede esclarecimento em vez de chutar;
-- pergunta que **não menciona plano nenhum** → uma leitura só, cuja resposta apenas
-  varia por plano: `plan=null` e a resposta cobre todos.
+- a question that **points to a specific plan without naming it** ("my plan", "the
+  company plan") → ambiguous: asks for clarification instead of guessing;
+- a question that **mentions no plan at all** → a single reading, whose answer just
+  varies per plan: `plan=null` and the answer covers all of them.
 
-### O contrato entre o planner e o índice
+### The contract between the planner and the index
 
-`DocType` e `Plan` são `Literal`s: o structured output garante que o planner nunca
-inventa um tipo. O outro lado dessa garantia: um `doc_type` novo indexado que o planner
-não conhece nunca pode ser escolhido — os documentos dele sumiriam de toda busca
-filtrada, silenciosamente. Por isso o chat valida o contrato na largada
-(`ensure_planner_covers_index()`): os valores distintos de `doc_type` e `plan` do
-índice são comparados com o que o planner conhece, e o chat encerra com instrução clara
-quando há algo desconhecido:
+`DocType` and `Plan` are `Literal`s: structured output guarantees the planner never
+invents a type. The other side of that guarantee: a new indexed `doc_type` that the
+planner does not know can never be chosen — its documents would silently vanish from
+every filtered search. That is why the chat validates the contract at startup
+(`ensure_planner_covers_index()`): the distinct `doc_type` and `plan` values in the
+index are compared with what the planner knows, and the chat exits with a clear
+instruction when something is unknown:
 
 ```
 The index has metadata the planner does not know: faq. Update DocType/Plan and the
 catalog in PLANNER_SYSTEM_PROMPT (app/query_planner.py).
 ```
 
-### Decisões de design
+### Design decisions
 
-- **`temperature=0`** — o planner é um classificador: a mesma pergunta tem que produzir
-  o mesmo plano, inclusive na decisão de pedir esclarecimento.
-- **`TOP_K=8`** — o retrieval é generoso de propósito: traz candidatos de sobra para o
-  reranking escolher, em vez de cortar a resposta fora antes da hora.
+- **`temperature=0`** — the planner is a classifier: the same question must produce
+  the same plan, including the decision to ask for clarification.
+- **`TOP_K=8`** — retrieval is generous on purpose: it brings plenty of candidates for
+  the reranker to choose from, instead of cutting the answer out too early.
 
 ## Reranking
 
-O retrieval otimiza **recall**: traz até 8 candidatos que podem ajudar. O reranking
-(`app/rerank.py`) otimiza **precisão**: uma chamada ao modelo com structured output
-(`RerankResult`) recebe a pergunta original, a pergunta normalizada, os termos exatos e
-os candidatos, e seleciona **no máximo 4 chunk_ids** que ajudam diretamente a responder
-— preferindo chunks específicos a genéricos e chunks que contêm os termos exatos.
-Só os selecionados entram no prompt final e nas fontes.
+Retrieval optimizes **recall**: it brings up to 8 candidates that might help. Reranking
+(`app/rerank.py`) optimizes **precision**: a model call with structured output
+(`RerankResult`) receives the original question, the normalized question, the exact
+terms and the candidates, and selects **at most 4 chunk_ids** that directly help answer
+— preferring specific chunks over generic ones and chunks that contain the exact terms.
+Only the selected chunks go into the final prompt and the sources.
 
-O reranker também funciona como portão de segurança: quando nenhum candidato sustenta a
-resposta, ele devolve uma lista vazia e o chat responde "não encontrei" **sem chamar o
-modelo final** — os candidatos irrelevantes nunca chegam ao prompt de resposta. IDs
-fora dos candidatos são descartados pela aplicação, no mesmo padrão das fontes.
+The reranker also works as a safety gate: when no candidate supports the answer, it
+returns an empty list and the chat answers "not found" **without calling the final
+model** — irrelevant candidates never reach the answer prompt. Ids outside the
+candidates are discarded by the application, with the same pattern as the sources.
 
-Para inspecionar e comparar:
+To inspect and compare:
 
-- `--debug` mostra os chunks recuperados (candidatos) e, em seguida, os selecionados;
-- `--show-prompt` mostra os três prompts, na ordem: planner, reranker e resposta final;
-- `--no-rerank` pula o reranking e envia os 4 primeiros do retrieval direto ao prompt
-  final — útil para comparar os dois fluxos com a mesma pergunta.
+- `--debug` shows the retrieved chunks (candidates) and then the selected ones;
+- `--show-prompt` shows the three prompts, in order: planner, reranker and final
+  answer;
+- `--no-rerank` skips reranking and sends the top 4 from retrieval straight to the
+  final prompt — useful to compare both flows with the same question.
 
-## Retrieval isolado
+## Isolated retrieval
 
-Para inspecionar a busca sem chamar o modelo de chat:
+To inspect the search without calling the chat model:
 
 ```bash
-python -m app.retrieve "Qual é o SLA para incidentes P1 no plano Enterprise?"
-python -m app.retrieve "Qual é o SLA para P1?" --top-k 5 --doc-type sla --plan all
+python -m app.retrieve "What is the SLA for P1 incidents on the Enterprise plan?"
+python -m app.retrieve "What is the SLA for P1?" --top-k 5 --doc-type sla --plan all
 ```
 
-Aceita `--top-k` e filtros por metadados (`--tenant`, `--product`, `--plan`,
-`--doc-type`, `--status`). Para cada resultado imprime score, `chunk_id`, arquivo,
-título, seção, plano, tipo, versão, status e um trecho do conteúdo. Útil para verificar
-se o contexto certo está sendo recuperado e para observar o efeito dos filtros — a
-mesma pergunta com um `--doc-type` errado mostra, na prática, o filtro eliminatório
-escondendo a resposta.
+Accepts `--top-k` and metadata filters (`--tenant`, `--product`, `--plan`,
+`--doc-type`, `--status`). For each result it prints the score, `chunk_id`, file,
+title, section, plan, type, version, status and an excerpt of the content. Useful to
+check whether the right context is being retrieved and to observe the effect of the
+filters — the same question with a wrong `--doc-type` shows, in practice, the
+eliminatory filter hiding the answer.
 
-## Utilitários de comparação
+## Comparison utilities
 
-- `python -m app.chat` — chat **sem RAG**: envia a pergunta direto ao modelo, com
-  streaming. Linha de base para comparar com as respostas do RAG.
-- `python -m app.context_chat [arquivo.md]` — chat com **um documento inteiro no
-  prompt** (sem embeddings nem retrieval). Funciona para documentos pequenos e mostra o
-  limite que o RAG resolve: muitos documentos, custo de tokens e busca seletiva.
+- `python -m app.chat` — chat **without RAG**: sends the question straight to the
+  model, with streaming. A baseline to compare with the RAG answers.
+- `python -m app.context_chat [file.md]` — chat with **an entire document in the
+  prompt** (no embeddings, no retrieval). Works for small documents and shows the limit
+  that RAG solves: many documents, token cost and selective search.
 
 ## Knowledge base
 
-Os documentos ficam em `knowledge_base/`: oito arquivos Markdown em português sobre a
-FCAI, cobrindo informações da empresa (`company`), visão geral do produto (`product`),
-políticas comercial e de faturamento (`policy`), SLA de suporte (`sla`) e um documento
-por plano — Starter, Pro e Enterprise (`plan`).
+The documents live in `knowledge_base/`: eight Markdown files in English about FCAI,
+covering company information (`company`), product overview (`product`), commercial and
+billing policies (`policy`), support SLA (`sla`) and one document per plan — Starter,
+Pro and Enterprise (`plan`).
 
-Todo documento tem front matter YAML com os metadados obrigatórios. `plan: all` marca
-documentos válidos para qualquer plano — o filtro de plano usa `plan IN [plano, "all"]`
-para que eles nunca sejam descartados.
+Every document has YAML front matter with the required metadata. `plan: all` marks
+documents valid for any plan — the plan filter uses `plan IN [plan, "all"]` so they are
+never discarded.
 
-### Adicionando documentos
+### Adding documents
 
-1. Crie o `.md` em `knowledge_base/` com o front matter completo.
-2. Se o documento introduz um `doc_type` ou `plan` novo, atualize os `Literal`s
-   `DocType`/`Plan` **e** o catálogo em `PLANNER_SYSTEM_PROMPT`
-   (`app/query_planner.py`) — a validação de startup aponta exatamente isso se você
-   esquecer.
-3. Regere e reindexe: `python -m app.ingest && python -m app.index` — só o documento
-   novo/alterado é indexado (veja **Incremental indexing**).
+1. Create the `.md` in `knowledge_base/` with the complete front matter.
+2. If the document introduces a new `doc_type` or `plan`, update the `DocType`/`Plan`
+   `Literal`s **and** the catalog in `PLANNER_SYSTEM_PROMPT` (`app/query_planner.py`) —
+   the startup validation points exactly to that if you forget.
+3. Regenerate and reindex: `python -m app.ingest && python -m app.index` — only the
+   new/changed document is indexed (see **Incremental indexing**).
 
-## Possibilidades de uso
+## Possible uses
 
-- **Assistente de suporte interno** sobre a documentação de uma empresa ou produto —
-  troque os documentos de `knowledge_base/`, ajuste os metadados e os `SAFE_FILTERS`.
-- **Bancada de experimentação de RAG** — cada módulo roda isolado (retrieval sem LLM,
-  chat sem RAG, documento inteiro no prompt, RAG completo), o que permite comparar
-  abordagens e medir o efeito de cada peça (cabeçalho de contexto, filtros, query
-  planner) com as flags de debug.
-- **Base para evoluções** — busca híbrida (BM25), frontend, histórico de conversa e
-  streaming da resposta são extensões naturais sobre esta estrutura; nenhuma está
-  implementada.
+- **Internal support assistant** over a company's or product's documentation — swap
+  the documents in `knowledge_base/`, adjust the metadata and the `SAFE_FILTERS`.
+- **RAG experimentation bench** — each module runs in isolation (retrieval without an
+  LLM, chat without RAG, full document in the prompt, full RAG), which allows comparing
+  approaches and measuring the effect of each piece (context header, filters, query
+  planner) with the debug flags.
+- **Foundation for further work** — hybrid search (BM25), a frontend, conversation
+  history and answer streaming are natural extensions on top of this structure; none of
+  them is implemented.
 
-## Estrutura
+## Structure
 
 ```
 app/
-  config.py        # carrega e valida variáveis de ambiente
-  db.py            # conexão com Postgres e extensão pgvector
-  main.py          # script de validação do ambiente
-  chat.py          # chat sem RAG (linha de base)
-  context_chat.py  # chat com um documento inteiro no prompt (sem RAG)
-  ingest.py        # lê, valida e gera chunks da knowledge_base (com document_hash)
-  index.py         # indexa no pgvector só o que mudou (new/changed/removed)
-  manifest.py      # hash de documentos e leitura/escrita do index_manifest.json
-  retrieve.py      # busca isolada no pgvector, com filtros (sem resposta RAG)
-  query_planner.py # planeja a busca: entende a pergunta, monta os filtros e busca
-  rerank.py        # seleciona quais chunks recuperados entram no prompt final
-  rag_pipeline.py  # o pipeline RAG completo, compartilhado pelo terminal e pela API
-  rag_chat.py      # o chat no terminal, por cima do pipeline
-  api.py           # a API HTTP (FastAPI), por cima do pipeline
-knowledge_base/    # documentos Markdown com front matter de metadados
-test.http          # requests prontos para a extensão REST Client do VS Code
+  config.py        # loads and validates environment variables
+  db.py            # Postgres connection and pgvector extension
+  main.py          # environment validation script
+  chat.py          # chat without RAG (baseline)
+  context_chat.py  # chat with an entire document in the prompt (no RAG)
+  ingest.py        # reads, validates and chunks the knowledge_base (with document_hash)
+  index.py         # indexes into pgvector only what changed (new/changed/removed)
+  manifest.py      # document hashing and reading/writing of index_manifest.json
+  retrieve.py      # isolated search in pgvector, with filters (no RAG answer)
+  query_planner.py # plans the search: understands the question, builds the filters and searches
+  rerank.py        # selects which retrieved chunks go into the final prompt
+  rag_pipeline.py  # the complete RAG pipeline, shared by the terminal and the API
+  rag_chat.py      # the terminal chat, on top of the pipeline
+  api.py           # the HTTP API (FastAPI), on top of the pipeline
+docs/
+  design-doc.md    # how the RAG concepts are structured
+  adr/             # Architecture Decision Records
+knowledge_base/    # Markdown documents with metadata front matter
+test.http          # ready-made requests for the VS Code REST Client extension
 docker-compose.yml
 requirements.txt
 .env.example

@@ -1,5 +1,5 @@
 ---
-title: SLA de Suporte ao Produto
+title: Product Support SLA
 tenant: fcai
 product: fcai-cloud
 plan: all
@@ -9,187 +9,188 @@ status: published
 visibility: internal
 ---
 
-# SLA de Suporte ao Produto
+# Product Support SLA
 
-Este documento define os níveis de serviço (SLA) do suporte ao **FCAI Cloud**. Ele
-descreve as severidades de chamados (P1, P2 e P3), os tempos de resposta por plano, os
-canais de atendimento, o processo de escalonamento, as janelas de manutenção, as metas
-de disponibilidade, a política de créditos de SLA e as responsabilidades do cliente.
-Todos os prazos e valores são fictícios e servem como exemplo para a base de
-conhecimento.
+This document defines the service levels (SLA) of **FCAI Cloud** support. It describes
+ticket severities (P1, P2 and P3), response times per plan, support channels, the
+escalation process, maintenance windows, availability targets, the SLA credit policy
+and the customer's responsibilities. All deadlines and amounts are fictitious and serve
+as examples for the knowledge base.
 
-## Definições
+## Definitions
 
-- **Tempo de resposta:** intervalo entre a abertura do chamado e a primeira resposta
-  qualificada de um analista de suporte.
-- **Tempo de contorno:** intervalo até a disponibilização de uma solução de contorno
-  (workaround) que restabeleça a operação, ainda que temporariamente.
-- **Tempo de resolução:** intervalo até a correção definitiva do problema.
-- **Horário comercial:** de segunda a sexta, das 9h às 18h (horário de Brasília),
-  exceto feriados nacionais.
-- **24x7:** atendimento em tempo integral, todos os dias, incluindo finais de semana e
-  feriados, aplicável apenas a chamados críticos de clientes Enterprise.
+- **Response time:** the interval between opening the ticket and the first qualified
+  response from a support analyst.
+- **Workaround time:** the interval until a workaround that restores operations, even
+  temporarily, is made available.
+- **Resolution time:** the interval until the problem is definitively fixed.
+- **Business hours:** Monday to Friday, from 9 a.m. to 6 p.m. (Brasília time), except
+  national holidays.
+- **24x7:** full-time service, every day, including weekends and holidays, applicable
+  only to critical tickets from Enterprise customers.
 
-## Severidades
+## Severities
 
-### P1 — Crítico
+### P1 — Critical
 
-A severidade **P1** representa indisponibilidade total do serviço ou falha que impede a
-ingestão e a visualização de dados para toda a organização. O impacto é grave e não há
-contorno viável. Exemplos:
+Severity **P1** represents total service unavailability or a failure that prevents data
+ingestion and visualization for the whole organization. The impact is severe and no
+viable workaround exists. Examples:
 
-- Painel completamente fora do ar para todos os usuários.
-- Ingestão de métricas e logs interrompida em produção.
-- Alertas não disparando durante um incidente real.
-- Falha de autenticação impedindo o acesso de todos os usuários.
+- Panel completely down for all users.
+- Metric and log ingestion interrupted in production.
+- Alerts not firing during a real incident.
+- Authentication failure preventing access for all users.
 
-### P2 — Alto
+### P2 — High
 
-A severidade **P2** representa degradação relevante do serviço, com contorno possível.
-O impacto é significativo, mas parte da operação continua funcional. Exemplos:
+Severity **P2** represents a relevant service degradation, with a possible workaround.
+The impact is significant, but part of the operation still works. Examples:
 
-- Atraso perceptível na ingestão de logs.
-- Lentidão em dashboards e consultas.
-- Falha em um conector ou integração específica.
-- Notificações de alerta chegando com atraso.
+- Noticeable delay in log ingestion.
+- Slow dashboards and queries.
+- Failure of a specific connector or integration.
+- Alert notifications arriving late.
 
-### P3 — Baixo
+### P3 — Low
 
-A severidade **P3** representa dúvidas gerais e problemas de baixo impacto, sem prejuízo
-relevante à operação. Exemplos:
+Severity **P3** represents general questions and low-impact problems, with no relevant
+harm to operations. Examples:
 
-- Dúvidas de configuração e de uso da plataforma.
-- Ajustes cosméticos em dashboards.
-- Solicitações de melhoria e esclarecimentos de documentação.
-- Perguntas sobre boas práticas de instrumentação.
+- Configuration and platform usage questions.
+- Cosmetic adjustments to dashboards.
+- Improvement requests and documentation clarifications.
+- Questions about instrumentation best practices.
 
-### Classificação e Reclassificação
+### Classification and Reclassification
 
-A severidade é sugerida pelo cliente na abertura do chamado e validada pelo time de
-suporte. Se o impacto real for diferente do informado, o suporte pode reclassificar a
-severidade, comunicando o motivo ao cliente. Chamados podem ser rebaixados de P1 para
-P2 quando um contorno é aplicado e a operação é parcialmente restabelecida.
+The severity is suggested by the customer when opening the ticket and validated by the
+support team. If the real impact differs from what was reported, support may
+reclassify the severity, explaining the reason to the customer. Tickets may be
+downgraded from P1 to P2 when a workaround is applied and operations are partially
+restored.
 
-## Tempo de Resposta por Plano
+## Response Time per Plan
 
-### Plano Starter
+### Starter Plan
 
-O plano Starter **não possui SLA de resposta garantido**. O atendimento ocorre via base
-de conhecimento e comunidade, sem prazo formal para P1, P2 ou P3.
+The Starter plan **has no guaranteed response SLA**. Service is provided through the
+knowledge base and the community, with no formal deadline for P1, P2 or P3.
 
-### Plano Pro
+### Pro Plan
 
-Atendimento em horário comercial, de segunda a sexta-feira:
+Service during business hours, Monday to Friday:
 
-- **P1:** resposta em até 8 horas úteis.
-- **P2:** resposta em até 1 dia útil.
-- **P3:** resposta em até 3 dias úteis.
+- **P1:** response within 8 business hours.
+- **P2:** response within 1 business day.
+- **P3:** response within 3 business days.
 
-### Plano Enterprise
+### Enterprise Plan
 
-Atendimento com canal dedicado e cobertura ampliada:
+Service with a dedicated channel and extended coverage:
 
-- **P1:** resposta em até 1 hora, com atendimento 24x7.
-- **P2:** resposta em até 4 horas úteis.
-- **P3:** resposta em até 1 dia útil.
+- **P1:** response within 1 hour, with 24x7 service.
+- **P2:** response within 4 business hours.
+- **P3:** response within 1 business day.
 
-Chamados **P1** e **P2** do Enterprise contam com acompanhamento do gerente de conta.
+Enterprise **P1** and **P2** tickets are followed by the account manager.
 
-### Tabela Resumo
+### Summary Table
 
-| Severidade | Starter | Pro | Enterprise |
+| Severity | Starter | Pro | Enterprise |
 | --- | --- | --- | --- |
-| P1 | sem SLA | 8 horas úteis | 1 hora (24x7) |
-| P2 | sem SLA | 1 dia útil | 4 horas úteis |
-| P3 | sem SLA | 3 dias úteis | 1 dia útil |
+| P1 | no SLA | 8 business hours | 1 hour (24x7) |
+| P2 | no SLA | 1 business day | 4 business hours |
+| P3 | no SLA | 3 business days | 1 business day |
 
-## Canais de Atendimento
+## Support Channels
 
-- **Base de conhecimento:** disponível para todos os planos, incluindo o Starter.
-- **E-mail de suporte:** suporte@fcai.example.com, para planos Pro e Enterprise.
-- **Portal de chamados:** abertura e acompanhamento de tickets para Pro e Enterprise.
-- **Canal dedicado:** disponível para Enterprise, com contato direto do time de suporte
-  e do gerente de conta.
-- **Telefone de emergência:** disponível para chamados P1 do Enterprise, 24x7.
+- **Knowledge base:** available for all plans, including Starter.
+- **Support e-mail:** support@fcai.example.com, for the Pro and Enterprise plans.
+- **Ticket portal:** opening and tracking tickets for Pro and Enterprise.
+- **Dedicated channel:** available for Enterprise, with direct contact with the support
+  team and the account manager.
+- **Emergency phone line:** available for Enterprise P1 tickets, 24x7.
 
-## Processo de Escalonamento
+## Escalation Process
 
-1. O chamado é aberto e classificado por severidade pelo cliente.
-2. O time de suporte valida a severidade e inicia o atendimento dentro do SLA.
-3. Chamados **P1** são escalonados imediatamente para o time de plantão (on-call).
-4. Se o tempo de contorno não for cumprido, o chamado é escalonado para a liderança de
-   suporte e, no Enterprise, comunicado ao gerente de conta.
-5. Após a resolução, o cliente recebe um resumo do atendimento; para P1, é elaborado um
-   relatório de causa raiz (post-mortem).
+1. The ticket is opened and classified by severity by the customer.
+2. The support team validates the severity and starts working within the SLA.
+3. **P1** tickets are escalated immediately to the on-call team.
+4. If the workaround time is not met, the ticket is escalated to support leadership
+   and, on Enterprise, communicated to the account manager.
+5. After resolution, the customer receives a summary of the service; for P1, a root
+   cause report (post-mortem) is prepared.
 
-### Comunicação Durante Incidentes
+### Communication During Incidents
 
-Durante incidentes P1, a FCAI publica atualizações na central de status e, para o
-Enterprise, envia comunicações diretas ao gerente de conta. As atualizações ocorrem em
-intervalos regulares até a normalização do serviço.
+During P1 incidents, FCAI publishes updates on the status page and, for Enterprise,
+sends direct communications to the account manager. Updates happen at regular
+intervals until the service is back to normal.
 
-## Janelas de Manutenção
+## Maintenance Windows
 
-Manutenções programadas são comunicadas com antecedência mínima de **72 horas** por
-e-mail e na central de status. Sempre que possível, ocorrem em janelas de baixo uso.
-Manutenções emergenciais podem ocorrer sem aviso prévio em situações críticas de
-segurança ou estabilidade, e são comunicadas o mais rápido possível.
+Scheduled maintenance is announced at least **72 hours** in advance by e-mail and on
+the status page. Whenever possible, it happens during low-usage windows. Emergency
+maintenance may happen without prior notice in critical security or stability
+situations, and is communicated as soon as possible.
 
-## Disponibilidade (Uptime)
+## Availability (Uptime)
 
-A FCAI mantém uma meta de disponibilidade mensal de:
+FCAI maintains a monthly availability target of:
 
-- **99,9%** para o plano **Enterprise**.
-- **99,5%** para o plano **Pro** (meta informativa, sem crédito de SLA).
-- Sem meta formal para o plano **Starter**.
+- **99.9%** for the **Enterprise** plan.
+- **99.5%** for the **Pro** plan (informational target, with no SLA credit).
+- No formal target for the **Starter** plan.
 
-A disponibilidade é medida mensalmente, excluindo janelas de manutenção programada, e
-reportada na central de status.
+Availability is measured monthly, excluding scheduled maintenance windows, and reported
+on the status page.
 
-## Créditos de SLA
+## SLA Credits
 
-Aplicável exclusivamente ao plano **Enterprise**. Caso a disponibilidade mensal fique
-abaixo da meta contratada, o cliente pode solicitar crédito na fatura seguinte,
-conforme a tabela fictícia:
+Applicable exclusively to the **Enterprise** plan. If the monthly availability falls
+below the contracted target, the customer may request a credit on the next invoice,
+according to this fictitious table:
 
-- Disponibilidade entre 99,0% e 99,9%: crédito de 5% da mensalidade proporcional.
-- Disponibilidade entre 98,0% e 99,0%: crédito de 10%.
-- Disponibilidade abaixo de 98,0%: crédito de 20%.
+- Availability between 99.0% and 99.9%: credit of 5% of the prorated monthly fee.
+- Availability between 98.0% and 99.0%: credit of 10%.
+- Availability below 98.0%: credit of 20%.
 
-A solicitação de crédito deve ser feita em até 30 dias após o mês de referência. O
-crédito não é convertido em reembolso em dinheiro e não se acumula entre meses.
+The credit request must be made within 30 days after the reference month. The credit
+is not converted into a cash refund and does not accumulate across months.
 
-### Exclusões do SLA
+### SLA Exclusions
 
-Não contam como indisponibilidade para fins de crédito:
+The following do not count as unavailability for credit purposes:
 
-- Janelas de manutenção programada comunicadas com antecedência.
-- Problemas causados por configuração incorreta do cliente.
-- Falhas em ambientes ou integrações fora do controle da FCAI.
-- Uso da plataforma fora dos limites do plano contratado.
+- Scheduled maintenance windows announced in advance.
+- Problems caused by incorrect customer configuration.
+- Failures in environments or integrations outside FCAI's control.
+- Use of the platform beyond the limits of the contracted plan.
 
-## Responsabilidades do Cliente
+## Customer Responsibilities
 
-Para que o SLA seja aplicável, o cliente deve:
+For the SLA to apply, the customer must:
 
-- Classificar corretamente a severidade dos chamados.
-- Fornecer informações suficientes para reprodução do problema.
-- Manter os agentes de coleta e SDKs em versões suportadas.
-- Utilizar a plataforma conforme os termos de uso e os limites do plano contratado.
-- Manter os contatos de suporte e financeiro atualizados no painel.
+- Classify ticket severity correctly.
+- Provide enough information to reproduce the problem.
+- Keep collection agents and SDKs on supported versions.
+- Use the platform according to the terms of use and the limits of the contracted plan.
+- Keep support and billing contacts up to date in the panel.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**Qual é o tempo de resposta para P1 no Enterprise?**
-Até 1 hora, com atendimento 24x7.
+**What is the P1 response time on Enterprise?**
+Up to 1 hour, with 24x7 service.
 
-**O plano Starter tem SLA?**
-Não. O Starter é atendido pela comunidade e base de conhecimento, sem prazo garantido.
+**Does the Starter plan have an SLA?**
+No. Starter is served by the community and the knowledge base, with no guaranteed
+deadline.
 
-**Como funciona o crédito de SLA?**
-É aplicável ao Enterprise quando a disponibilidade fica abaixo da meta, como desconto na
-fatura seguinte, mediante solicitação em até 30 dias.
+**How does the SLA credit work?**
+It applies to Enterprise when availability falls below the target, as a discount on the
+next invoice, upon request within 30 days.
 
-**Posso reclassificar a severidade de um chamado?**
-Sim. A severidade pode ser ajustada pelo suporte conforme o impacto real, com
-comunicação do motivo.
+**Can the severity of a ticket be reclassified?**
+Yes. Support may adjust the severity according to the real impact, explaining the
+reason.

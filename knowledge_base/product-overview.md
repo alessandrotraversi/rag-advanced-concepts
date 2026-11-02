@@ -1,5 +1,5 @@
 ---
-title: Visão Geral do Produto
+title: Product Overview
 tenant: fcai
 product: fcai-cloud
 plan: all
@@ -9,187 +9,187 @@ status: published
 visibility: internal
 ---
 
-# Visão Geral do Produto
+# Product Overview
 
-O **FCAI Cloud** é uma plataforma de observabilidade que unifica métricas, logs e
-traces em um único painel. Este documento descreve a arquitetura em alto nível, os
-recursos por área, os planos disponíveis, os limites de cada plano, as integrações
-suportadas, os principais casos de uso e um conjunto de perguntas frequentes. Os
-números e valores citados são fictícios e servem apenas como exemplo para a base de
-conhecimento.
+**FCAI Cloud** is an observability platform that unifies metrics, logs and traces in a
+single panel. This document describes the high-level architecture, the features per
+area, the available plans, each plan's limits, the supported integrations, the main use
+cases and a set of frequently asked questions. The numbers and amounts mentioned are
+fictitious and serve only as examples for the knowledge base.
 
-## Conceito
+## Concept
 
-Observabilidade é a capacidade de entender o estado interno de um sistema a partir dos
-dados que ele emite. O FCAI Cloud organiza esses dados em três pilares — métricas,
-logs e traces — e adiciona uma camada de alertas e visualização para transformar dados
-brutos em decisões rápidas durante a operação.
+Observability is the ability to understand the internal state of a system from the
+data it emits. FCAI Cloud organizes that data into three pillars — metrics, logs and
+traces — and adds a layer of alerts and visualization to turn raw data into quick
+decisions during operations.
 
-## Arquitetura em Alto Nível
+## High-Level Architecture
 
-O FCAI Cloud é composto por três camadas principais:
+FCAI Cloud is made of three main layers:
 
-1. **Coleta:** agentes e SDKs compatíveis com OpenTelemetry enviam dados de métricas,
-   logs e traces para os endpoints de ingestão da plataforma.
-2. **Processamento e Armazenamento:** os dados recebidos são normalizados, indexados e
-   armazenados em backends otimizados para séries temporais, busca de texto e
-   correlação de traces.
-3. **Visualização e Alertas:** dashboards, exploradores de dados e um motor de alertas
-   permitem consultar, correlacionar e reagir aos dados em tempo real.
+1. **Collection:** OpenTelemetry-compatible agents and SDKs send metrics, logs and
+   traces to the platform's ingestion endpoints.
+2. **Processing and Storage:** incoming data is normalized, indexed and stored in
+   backends optimized for time series, text search and trace correlation.
+3. **Visualization and Alerts:** dashboards, data explorers and an alerting engine let
+   you query, correlate and react to data in real time.
 
-A ingestão é feita por região, e o cliente escolhe a região de armazenamento no momento
-da criação da organização. A retenção de dados varia conforme o plano contratado.
+Ingestion is done per region, and the customer chooses the storage region when the
+organization is created. Data retention varies according to the plan.
 
-### Fluxo de Dados
+### Data Flow
 
-1. O agente coleta os dados no ambiente do cliente.
-2. Os dados são enviados de forma segura para o endpoint de ingestão da região.
-3. A plataforma valida, normaliza e indexa os dados.
-4. Os dados ficam disponíveis para consulta em dashboards e exploradores.
-5. Regras de alerta avaliam os dados continuamente e disparam notificações.
+1. The agent collects data in the customer's environment.
+2. The data is sent securely to the region's ingestion endpoint.
+3. The platform validates, normalizes and indexes the data.
+4. The data becomes available for querying in dashboards and explorers.
+5. Alert rules continuously evaluate the data and trigger notifications.
 
-## Recursos por Área
+## Features per Area
 
-### Métricas
+### Metrics
 
-- Coleta de métricas de infraestrutura (CPU, memória, disco, rede) e de aplicação.
-- Suporte a métricas customizadas via SDK e via protocolo compatível com OpenTelemetry.
-- Agregações por tags e dimensões, com granularidade configurável.
-- Visualização em gráficos de linha, área, barras e mapas de calor.
-- Funções de consulta para taxas, percentis e janelas móveis.
+- Collection of infrastructure (CPU, memory, disk, network) and application metrics.
+- Support for custom metrics via SDK and via an OpenTelemetry-compatible protocol.
+- Aggregations by tags and dimensions, with configurable granularity.
+- Visualization as line, area, bar charts and heat maps.
+- Query functions for rates, percentiles and moving windows.
 
 ### Logs
 
-- Centralização de logs de múltiplas fontes e serviços.
-- Busca de texto completo com filtros por atributos estruturados.
-- Parsing e enriquecimento de logs por regras configuráveis.
-- Retenção configurável conforme o plano, com arquivamento opcional.
-- Detecção de padrões e agrupamento de logs semelhantes.
+- Centralization of logs from multiple sources and services.
+- Full-text search with filters on structured attributes.
+- Log parsing and enrichment through configurable rules.
+- Retention configurable according to the plan, with optional archiving.
+- Pattern detection and grouping of similar logs.
 
-### Tracing Distribuído
+### Distributed Tracing
 
-- Rastreamento de requisições que atravessam múltiplos serviços.
-- Visualização de spans em linha do tempo, com identificação de gargalos.
-- Correlação automática entre traces, logs e métricas do mesmo contexto.
-- Amostragem configurável para controlar o volume de dados.
-- Mapa de serviços mostrando dependências e latências entre componentes.
+- Tracing of requests that cross multiple services.
+- Span visualization on a timeline, with bottleneck identification.
+- Automatic correlation between traces, logs and metrics from the same context.
+- Configurable sampling to control data volume.
+- Service map showing dependencies and latencies between components.
 
-### Alertas
+### Alerts
 
-- Regras de alerta baseadas em limiares, ausência de dados e detecção de anomalias.
-- Notificação por e-mail, Slack, Microsoft Teams, PagerDuty e webhook genérico.
-- Políticas de silenciamento e agrupamento para reduzir ruído.
-- Histórico de disparos e status de cada alerta.
-- Escalonamento de alertas não reconhecidos dentro de um prazo configurável.
+- Alert rules based on thresholds, missing data and anomaly detection.
+- Notifications via e-mail, Slack, Microsoft Teams, PagerDuty and generic webhooks.
+- Silencing and grouping policies to reduce noise.
+- Trigger history and status of each alert.
+- Escalation of unacknowledged alerts within a configurable time.
 
 ### Dashboards
 
-- Painéis customizáveis com widgets de métricas, logs e traces.
-- Compartilhamento interno e links de leitura para stakeholders.
-- Modelos (templates) de dashboard para cenários comuns.
-- Variáveis de dashboard para filtrar por ambiente, serviço ou região.
-- Modo de visualização em tela cheia para NOC e paineis de operação.
+- Customizable panels with metric, log and trace widgets.
+- Internal sharing and read-only links for stakeholders.
+- Dashboard templates for common scenarios.
+- Dashboard variables to filter by environment, service or region.
+- Full-screen view mode for NOC and operations panels.
 
-## Planos
+## Plans
 
-O FCAI Cloud é oferecido em três planos. As diferenças principais estão em número de
-usuários, retenção de dados, volume de ingestão e nível de suporte.
+FCAI Cloud is offered in three plans. The main differences are the number of users,
+data retention, ingestion volume and support level.
 
 ### Starter
 
-Plano gratuito voltado para times pequenos e para avaliação da plataforma.
+Free plan aimed at small teams and at evaluating the platform.
 
-- 3 usuários incluídos.
-- Retenção de dados por 7 dias.
-- Até 5 GB de ingestão de logs por mês.
-- Até 100 séries temporais de métricas ativas.
-- Suporte via comunidade e base de conhecimento, sem SLA garantido.
+- 3 users included.
+- 7-day data retention.
+- Up to 5 GB of log ingestion per month.
+- Up to 100 active metric time series.
+- Support via community and knowledge base, with no guaranteed SLA.
 
 ### Pro
 
-Plano pago para times em crescimento — R$ 499/mês (valor fictício).
+Paid plan for growing teams — R$ 499/month (fictitious price).
 
-- Até 20 usuários.
-- Retenção de dados por 30 dias.
-- Até 100 GB de ingestão de logs por mês.
-- Até 5.000 séries temporais de métricas ativas.
-- Tracing com amostragem configurável.
-- Suporte técnico com SLA padrão em horário comercial.
+- Up to 20 users.
+- 30-day data retention.
+- Up to 100 GB of log ingestion per month.
+- Up to 5,000 active metric time series.
+- Tracing with configurable sampling.
+- Technical support with a standard SLA during business hours.
 
 ### Enterprise
 
-Plano para empresas com necessidades avançadas — valores sob consulta comercial.
+Plan for companies with advanced needs — pricing on request from sales.
 
-- Usuários ilimitados.
-- Retenção de dados configurável, de até 15 meses.
-- Volume de ingestão negociado por contrato.
-- Séries temporais de métricas conforme contrato.
-- Suporte 24x7 com SLA reduzido e gerente de conta dedicado.
-- Recursos avançados de segurança: SSO, RBAC e trilhas de auditoria.
+- Unlimited users.
+- Configurable data retention, of up to 15 months.
+- Ingestion volume negotiated by contract.
+- Metric time series according to the contract.
+- 24x7 support with a shorter SLA and a dedicated account manager.
+- Advanced security features: SSO, RBAC and audit trails.
 
-## Limites de Ingestão e Cotas
+## Ingestion Limits and Quotas
 
-Cada plano possui um limite mensal de ingestão de logs e métricas, além de cotas de
-séries temporais ativas. O comportamento ao atingir o limite varia por plano:
+Each plan has a monthly log and metric ingestion limit, plus quotas of active time
+series. The behavior when the limit is reached varies by plan:
 
-- **Starter:** ao atingir o limite, a ingestão é interrompida até o próximo ciclo.
-- **Pro:** permite ingestão adicional, cobrada como consumo excedente por GB.
-- **Enterprise:** o volume é negociado por contrato, com regras de excedente próprias.
+- **Starter:** when the limit is reached, ingestion stops until the next cycle.
+- **Pro:** allows additional ingestion, billed as overage per GB.
+- **Enterprise:** volume is negotiated by contract, with its own overage rules.
 
-Os limites são medidos por ciclo de faturamento e podem ser acompanhados no painel de
-uso da organização. Notificações são enviadas ao atingir 80% e 100% da cota. É possível
-configurar cotas por time no plano Enterprise, evitando que um único time consuma toda
-a capacidade contratada.
+Limits are measured per billing cycle and can be tracked in the organization's usage
+panel. Notifications are sent when 80% and 100% of the quota are reached. Per-team
+quotas can be configured on the Enterprise plan, preventing a single team from
+consuming all the contracted capacity.
 
-## Integrações
+## Integrations
 
-O FCAI Cloud integra com agentes de coleta compatíveis com **OpenTelemetry** e oferece
-conectores nativos para os principais ambientes:
+FCAI Cloud integrates with **OpenTelemetry**-compatible collection agents and offers
+native connectors for the main environments:
 
-- **Kubernetes:** coleta de métricas de cluster, pods e nós, além de logs de containers.
-- **Docker:** coleta de métricas e logs de containers em hosts individuais.
-- **Provedores de nuvem:** conectores para métricas de serviços gerenciados populares.
-- **Ferramentas de incidentes:** integração com PagerDuty e canais de mensageria.
-- **Mensageria:** Slack e Microsoft Teams para notificações de alertas.
-- **Webhooks:** integração genérica para sistemas internos do cliente.
+- **Kubernetes:** collection of cluster, pod and node metrics, plus container logs.
+- **Docker:** collection of container metrics and logs on individual hosts.
+- **Cloud providers:** connectors for metrics of popular managed services.
+- **Incident tools:** integration with PagerDuty and messaging channels.
+- **Messaging:** Slack and Microsoft Teams for alert notifications.
+- **Webhooks:** generic integration for the customer's internal systems.
 
-SDKs oficiais estão disponíveis para as linguagens mais usadas em backend, permitindo
-instrumentação manual quando necessário. A instrumentação automática cobre bibliotecas
-populares de HTTP, banco de dados e filas de mensagens.
+Official SDKs are available for the most used backend languages, allowing manual
+instrumentation when needed. Automatic instrumentation covers popular HTTP, database
+and message queue libraries.
 
-## Casos de Uso
+## Use Cases
 
-- **Monitoramento de produção:** acompanhar a saúde de serviços críticos em tempo real.
-- **Resposta a incidentes:** correlacionar métricas, logs e traces durante uma falha.
-- **Análise de performance:** identificar gargalos em requisições distribuídas.
-- **Capacidade e custo:** acompanhar tendências de uso para planejar infraestrutura.
-- **Conformidade:** reter logs pelo período exigido por políticas internas.
-- **Experiência do usuário:** correlacionar latência de backend com impacto no cliente.
+- **Production monitoring:** track the health of critical services in real time.
+- **Incident response:** correlate metrics, logs and traces during a failure.
+- **Performance analysis:** identify bottlenecks in distributed requests.
+- **Capacity and cost:** track usage trends to plan infrastructure.
+- **Compliance:** retain logs for the period required by internal policies.
+- **User experience:** correlate backend latency with customer impact.
 
-### Exemplo de Cenário
+### Example Scenario
 
-Durante um incidente, a latência de um serviço aumenta. O time abre o dashboard do
-serviço, identifica um pico de erros nos logs, segue o trace de uma requisição lenta e
-descobre que uma dependência externa está respondendo devagar. Com métricas, logs e
-traces no mesmo lugar, o diagnóstico leva minutos em vez de horas.
+During an incident, a service's latency increases. The team opens the service
+dashboard, spots an error spike in the logs, follows the trace of a slow request and
+finds out that an external dependency is responding slowly. With metrics, logs and
+traces in the same place, the diagnosis takes minutes instead of hours.
 
-## Roadmap (Informativo)
+## Roadmap (Informational)
 
-O roadmap fictício da plataforma inclui evoluções em detecção de anomalias, dashboards
-colaborativos e relatórios de conformidade. As datas e prioridades são definidas
-internamente e podem mudar sem aviso, não constituindo compromisso contratual.
+The platform's fictitious roadmap includes improvements in anomaly detection,
+collaborative dashboards and compliance reports. Dates and priorities are defined
+internally and may change without notice, and do not constitute a contractual
+commitment.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**O FCAI Cloud usa OpenTelemetry?**
-Sim. A coleta é compatível com OpenTelemetry, além de conectores nativos.
+**Does FCAI Cloud use OpenTelemetry?**
+Yes. Collection is OpenTelemetry-compatible, in addition to native connectors.
 
-**Posso mudar a região de armazenamento depois?**
-A região é definida na criação da organização e só muda por migração assistida.
+**Can I change the storage region later?**
+The region is defined when the organization is created and only changes through an
+assisted migration.
 
-**O que acontece se eu ultrapassar a cota de ingestão?**
-No Starter a ingestão para; no Pro e Enterprise há cobrança por consumo excedente.
+**What happens if I exceed the ingestion quota?**
+On Starter ingestion stops; on Pro and Enterprise overage is billed.
 
-**Existe limite de dashboards?**
-Não há limite rígido de dashboards; os limites principais são de usuários, retenção e
-ingestão, conforme o plano.
+**Is there a dashboard limit?**
+There is no hard limit on dashboards; the main limits are users, retention and
+ingestion, according to the plan.

@@ -1,5 +1,5 @@
 ---
-title: Política de Faturamento
+title: Billing Policy
 tenant: fcai
 product: fcai-cloud
 plan: all
@@ -9,160 +9,158 @@ status: published
 visibility: internal
 ---
 
-# Política de Faturamento
+# Billing Policy
 
-Este documento descreve as formas de pagamento do **FCAI Cloud**, os ciclos de
-cobrança, a cobrança por consumo excedente, a emissão de notas fiscais, o tratamento de
-falhas de cobrança, o processo de regularização de acesso, a retenção de dados após
-suspensão e as regras de reembolso. Todos os valores e prazos são fictícios e servem
-como exemplo.
+This document describes the payment methods of **FCAI Cloud**, the billing cycles,
+overage billing, invoice issuance, how billing failures are handled, the access
+restoration process, data retention after suspension and the refund rules. All amounts
+and deadlines are fictitious and serve as examples.
 
-## Princípios de Faturamento
+## Billing Principles
 
-- Cobrança previsível, com valores e ciclos claros antes da contratação.
-- Notificação de consumo antes de qualquer cobrança de excedente.
-- Preservação de dados e configurações durante o período de regularização.
-- Restabelecimento automático do acesso após a quitação de pendências.
+- Predictable billing, with clear amounts and cycles before purchase.
+- Usage notifications before any overage charge.
+- Data and settings are preserved during the restoration period.
+- Access is restored automatically once outstanding payments are settled.
 
-## Formas de Pagamento
+## Payment Methods
 
-### Cartão de Crédito
+### Credit Card
 
-O plano **Pro** é cobrado por cartão de crédito de forma recorrente, mensal ou anual. A
-confirmação da cobrança é imediata, e o acesso permanece ativo enquanto o pagamento for
-aprovado. O cliente pode atualizar os dados do cartão a qualquer momento no painel de
-faturamento. Recomenda-se manter um cartão de backup para evitar interrupções.
+The **Pro** plan is billed to a credit card on a recurring basis, monthly or yearly.
+Payment confirmation is immediate, and access remains active as long as the payment is
+approved. The customer can update the card details at any time in the billing panel.
+Keeping a backup card is recommended to avoid interruptions.
 
-### Boleto Bancário
+### Bank Slip (Boleto)
 
-Empresas podem optar por **boleto** em contratações anuais. Regras principais:
+Companies may choose a **bank slip (boleto)** for yearly subscriptions. Main rules:
 
-- A compensação do boleto pode levar até **3 dias úteis**.
-- A emissão de um novo ciclo depende da confirmação do pagamento anterior.
-- Boletos vencidos precisam ser reemitidos no portal de faturamento.
+- Bank slip clearing can take up to **3 business days**.
+- A new cycle is only issued once the previous payment is confirmed.
+- Overdue bank slips must be reissued in the billing portal.
 
-### Pagamento Corporativo (Enterprise)
+### Corporate Payment (Enterprise)
 
-No plano **Enterprise**, o pagamento é feito de forma corporativa, com faturamento por
-contrato. As condições incluem:
+On the **Enterprise** plan, payment is corporate, invoiced according to the contract.
+Conditions include:
 
-- Emissão de nota fiscal conforme o acordo comercial.
-- Prazos de pagamento negociados (por exemplo, 15, 30 ou 45 dias).
-- Possibilidade de faturamento por centro de custo ou por unidade de negócio.
-- Envio das faturas para os contatos financeiros cadastrados.
+- Invoices issued according to the commercial agreement.
+- Negotiated payment terms (for example, 15, 30 or 45 days).
+- Optional invoicing per cost center or per business unit.
+- Invoices sent to the registered billing contacts.
 
-## Ciclos de Cobrança
+## Billing Cycles
 
-- **Mensal:** a cobrança ocorre na data de aniversário da assinatura, a cada mês.
-- **Anual:** a cobrança ocorre uma vez a cada 12 meses, com desconto em relação ao
-  mensal.
-- **Enterprise:** o ciclo é definido em contrato, podendo ser mensal, trimestral ou
-  anual.
+- **Monthly:** the charge happens on the subscription anniversary date, every month.
+- **Yearly:** the charge happens once every 12 months, with a discount compared to
+  monthly billing.
+- **Enterprise:** the cycle is defined in the contract and can be monthly, quarterly or
+  yearly.
 
-A data de início do ciclo é a data de ativação do plano pago. Alterações de plano
-podem gerar cobrança proporcional (pro rata), conforme a política comercial.
+The cycle start date is the activation date of the paid plan. Plan changes may generate
+a prorated charge, according to the commercial policy.
 
-## Cobrança por Consumo Excedente
+## Overage Billing
 
-Nos planos **Pro** e **Enterprise**, o volume de ingestão que ultrapassar o limite do
-plano é cobrado como **consumo excedente**:
+On the **Pro** and **Enterprise** plans, the ingestion volume that exceeds the plan
+limit is billed as **overage**:
 
-- O excedente é medido por **GB** de ingestão, no fechamento de cada ciclo.
-- O painel de uso mostra o consumo atual e projeta o excedente estimado do ciclo.
-- Notificações são enviadas ao atingir **80%** e **100%** da cota do plano.
-- No **Enterprise**, as regras e os valores de excedente seguem o contrato.
+- Overage is measured per **GB** of ingestion, at the close of each cycle.
+- The usage panel shows current consumption and projects the estimated overage for the
+  cycle.
+- Notifications are sent when **80%** and **100%** of the plan quota are reached.
+- On **Enterprise**, overage rules and prices follow the contract.
 
-O consumo excedente já faturado não é reembolsável. É possível definir alertas de
-consumo para evitar surpresas na fatura.
+Overage that has already been invoiced is non-refundable. Usage alerts can be set up to
+avoid surprises on the invoice.
 
-### Exemplo de Cálculo (fictício)
+### Calculation Example (fictitious)
 
-Se o plano Pro inclui 100 GB de ingestão de logs e a organização consome 130 GB no
-ciclo, os 30 GB adicionais são cobrados como excedente, conforme o preço por GB vigente,
-no fechamento do ciclo.
+If the Pro plan includes 100 GB of log ingestion and the organization consumes 130 GB in
+the cycle, the additional 30 GB are billed as overage, at the current price per GB, at
+the close of the cycle.
 
-## Impostos e Notas Fiscais
+## Taxes and Invoices
 
-- Os preços divulgados podem não incluir impostos, que são aplicados conforme a
-  legislação vigente e o endereço de cobrança.
-- A **nota fiscal** é emitida a cada cobrança e disponibilizada no portal de
-  faturamento.
-- Clientes corporativos podem configurar dados fiscais específicos, como razão social,
-  CNPJ e endereço de faturamento.
-- Ajustes de dados fiscais devem ser feitos antes do fechamento do ciclo para constar
-  na nota daquele período.
+- Published prices may not include taxes, which are applied according to current
+  legislation and the billing address.
+- An **invoice** is issued for every charge and made available in the billing portal.
+- Corporate customers can configure specific tax details, such as legal name, CNPJ
+  (Brazilian company tax ID) and billing address.
+- Tax detail changes must be made before the cycle closes to appear on that period's
+  invoice.
 
-## Falha de Cobrança
+## Billing Failure
 
-Em caso de falha na cobrança — por recusa do cartão, boleto não pago ou fatura
-corporativa em atraso — a FCAI adota o seguinte fluxo fictício:
+When a charge fails — because the card was declined, the bank slip was not paid or a
+corporate invoice is overdue — FCAI follows this fictitious flow:
 
-1. **Notificação:** o responsável financeiro é notificado por e-mail sobre a falha.
-2. **Reprocessamento:** cobranças por cartão são reprocessadas automaticamente por até
-   **3 tentativas**, em intervalos de alguns dias.
-3. **Período de tolerância:** a conta permanece ativa durante um período de tolerância
-   para regularização.
-4. **Restrição de acesso:** persistindo a inadimplência, a conta entra em modo restrito.
+1. **Notification:** the billing contact is notified by e-mail about the failure.
+2. **Retry:** card charges are automatically retried up to **3 times**, a few days
+   apart.
+3. **Grace period:** the account remains active during a grace period for settlement.
+4. **Access restriction:** if the payment is still outstanding, the account enters
+   restricted mode.
 
-## Modo Restrito e Suspensão
+## Restricted Mode and Suspension
 
-Durante a pendência financeira, a conta pode entrar em **modo restrito**, com:
+While a payment is outstanding, the account may enter **restricted mode**, with:
 
-- Ingestão de novos dados **suspensa**.
-- Acesso **somente leitura** aos dados ainda retidos.
-- Alertas e integrações pausados.
+- Ingestion of new data **suspended**.
+- **Read-only** access to the data still retained.
+- Alerts and integrations paused.
 
-Se a pendência não for resolvida dentro do prazo, a conta pode ser **suspensa** e, após
-prazo adicional, os dados podem ser removidos conforme a política de retenção.
+If the outstanding payment is not resolved in time, the account may be **suspended**
+and, after an additional period, data may be removed according to the retention
+policy.
 
-### Linha do Tempo (fictícia)
+### Timeline (fictitious)
 
-- **Dia 0:** falha de cobrança e notificação.
-- **Dias 1 a 7:** período de tolerância, conta ativa.
-- **Dia 8:** modo restrito, ingestão suspensa.
-- **Dia 30:** suspensão da conta.
-- **Dia 60:** possível remoção de dados conforme a retenção.
+- **Day 0:** billing failure and notification.
+- **Days 1 to 7:** grace period, account active.
+- **Day 8:** restricted mode, ingestion suspended.
+- **Day 30:** account suspension.
+- **Day 60:** possible data removal according to retention.
 
-Os prazos acima são ilustrativos e podem variar conforme o plano e o contrato.
+The deadlines above are illustrative and may vary by plan and contract.
 
-## Regularização de Acesso
+## Access Restoration
 
-Após a confirmação do pagamento pendente:
+After the outstanding payment is confirmed:
 
-- O acesso é restabelecido **automaticamente**, sem necessidade de nova contratação.
-- As configurações, dashboards e integrações são preservados, desde que a conta não
-  tenha sido removida.
-- A ingestão de dados é retomada a partir do momento da regularização; dados do período
-  de suspensão podem não ser recuperados.
+- Access is restored **automatically**, with no need for a new subscription.
+- Settings, dashboards and integrations are preserved, as long as the account has not
+  been removed.
+- Data ingestion resumes from the moment of settlement; data from the suspension period
+  may not be recoverable.
 
-## Retenção e Exclusão de Dados
+## Data Retention and Deletion
 
-Após o cancelamento ou a suspensão definitiva, os dados entram em um processo de
-retenção e depois são excluídos conforme a política vigente. Clientes Enterprise podem
-solicitar a exportação dos dados antes da exclusão, dentro do prazo previsto em
-contrato.
+After cancellation or definitive suspension, data enters a retention process and is
+then deleted according to the current policy. Enterprise customers may request a data
+export before deletion, within the period set in the contract.
 
-## Reembolso e Créditos
+## Refunds and Credits
 
-- O reembolso do plano **Pro** segue a política comercial: até **7 dias corridos** após
-  a contratação.
-- **Créditos de SLA** (Enterprise) são aplicados na fatura seguinte e não são
-  convertidos em dinheiro (ver documento de SLA de suporte).
-- Ajustes de cobrança por erro de faturamento são corrigidos na próxima fatura ou por
-  nota de crédito, conforme o caso.
+- **Pro** plan refunds follow the commercial policy: up to **7 calendar days** after
+  purchase.
+- **SLA credits** (Enterprise) are applied to the next invoice and are not converted
+  into cash (see the support SLA document).
+- Billing errors are corrected on the next invoice or through a credit note, as
+  appropriate.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**O que acontece se meu cartão falhar?**
-Você é notificado e a cobrança é reprocessada em até 3 tentativas antes de restringir o
-acesso.
+**What happens if my card fails?**
+You are notified and the charge is retried up to 3 times before access is restricted.
 
-**Perco meus dados se a conta for suspensa?**
-Durante o modo restrito os dados ficam em somente leitura; a remoção só ocorre após os
-prazos de suspensão e retenção.
+**Do I lose my data if the account is suspended?**
+During restricted mode the data is read-only; removal only happens after the
+suspension and retention periods.
 
-**Consigo nota fiscal?**
-Sim. A nota é emitida a cada cobrança e fica disponível no portal de faturamento.
+**Can I get an invoice?**
+Yes. An invoice is issued for every charge and is available in the billing portal.
 
-**Como evito cobrança de excedente?**
-Acompanhe o painel de uso e configure alertas de consumo em 80% e 100% da cota.
+**How do I avoid overage charges?**
+Monitor the usage panel and configure usage alerts at 80% and 100% of the quota.

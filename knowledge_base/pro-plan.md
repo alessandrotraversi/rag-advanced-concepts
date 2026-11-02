@@ -1,5 +1,5 @@
 ---
-title: Plano Pro
+title: Pro Plan
 tenant: fcai
 product: fcai-cloud
 plan: pro
@@ -9,164 +9,169 @@ status: published
 visibility: internal
 ---
 
-# Plano Pro
+# Pro Plan
 
-O plano **Pro** do FCAI Cloud é o plano pago self-service, voltado para times em
-produção que precisam de limites maiores, SLA de suporte em horário comercial e
-cobrança previsível por cartão. Este documento detalha para quem o plano é indicado,
-seus limites, recursos, segurança, suporte, condições comerciais, disponibilidade e as
-diferenças em relação aos planos Starter e Enterprise. Todos os números são fictícios!
+The FCAI Cloud **Pro** plan is the self-service paid plan, aimed at production teams
+that need higher limits, a business-hours support SLA and predictable card billing.
+This document details who the plan is for, its limits, features, security, support,
+commercial terms, availability and the differences compared to the Starter and
+Enterprise plans. All numbers are fictitious!
 
-## Para Quem é o Pro
+## Who Pro Is For
 
-O Pro atende organizações que:
+Pro serves organizations that:
 
-- Já operam serviços em produção e dependem de observabilidade no dia a dia.
-- Têm um time de engenharia de tamanho médio, com até 20 pessoas na plataforma.
-- Precisam de histórico de dados maior do que os 7 dias do Starter.
-- Querem prazo de resposta formal do suporte, mesmo que em horário comercial.
-- Preferem contratar sozinhas, sem negociação comercial nem contrato.
-- Aceitam cobrança recorrente por cartão de crédito.
+- Already run services in production and rely on observability every day.
+- Have a mid-sized engineering team, with up to 20 people on the platform.
+- Need a longer data history than Starter's 7 days.
+- Want a formal support response time, even if only during business hours.
+- Prefer to purchase on their own, without commercial negotiation or a contract.
+- Accept recurring credit card billing.
 
-## Limites do Plano
+## Plan Limits
 
-- **Até 20 usuários** na organização.
-- **Retenção de dados de 30 dias** para métricas, logs e traces.
-- **Ingestão de 100 GB de logs por mês**, com cobrança de excedente por GB.
-- **Múltiplos times** dentro da organização, sem cotas por time.
-- **Alertas avançados** e integrações com canais de notificação.
-- **Dashboards personalizados**, sem limite de quantidade.
+- **Up to 20 users** in the organization.
+- **30-day data retention** for metrics, logs and traces.
+- **100 GB of log ingestion per month**, with overage billed per GB.
+- **Multiple teams** within the organization, without per-team quotas.
+- **Advanced alerts** and integrations with notification channels.
+- **Custom dashboards**, with no limit on quantity.
 
-## Consumo Excedente
+## Overage
 
-Diferente do Starter, o Pro **não pausa a ingestão** ao atingir o limite: o volume que
-ultrapassa a cota do plano é cobrado como **consumo excedente**, medido por GB no
-fechamento do ciclo.
+Unlike Starter, Pro **does not pause ingestion** when the limit is reached: the volume
+above the plan quota is billed as **overage**, measured per GB at the close of the
+cycle.
 
-- Notificações são enviadas ao atingir **80%** e **100%** da cota do plano.
-- O painel de uso mostra o consumo atual e projeta o excedente estimado do ciclo.
-- É possível definir alertas de consumo para evitar surpresas na fatura.
-- O consumo excedente já faturado **não é reembolsável**.
+- Notifications are sent when **80%** and **100%** of the plan quota are reached.
+- The usage panel shows current consumption and projects the estimated overage for the
+  cycle.
+- Usage alerts can be set up to avoid surprises on the invoice.
+- Overage that has already been invoiced is **non-refundable**.
 
-### Exemplo de Cálculo (fictício)
+### Calculation Example (fictitious)
 
-Se a organização consome 130 GB em um ciclo, os 30 GB acima dos 100 GB inclusos são
-cobrados como excedente, conforme o preço por GB vigente, no fechamento do ciclo
-(ver política de faturamento).
+If the organization consumes 130 GB in a cycle, the 30 GB above the 100 GB included are
+billed as overage, at the current price per GB, at the close of the cycle (see the
+billing policy).
 
-## Recursos Incluídos
+## Included Features
 
-- Coleta de **métricas, logs e traces**, com correlação entre os três pilares.
-- **Tracing distribuído** com amostragem configurável.
-- **Alertas** com múltiplos destinos de notificação.
-- **Portal de chamados** e **e-mail de suporte** para abertura de tickets.
-- **Painel de uso** com projeção de consumo e excedente do ciclo.
+- Collection of **metrics, logs and traces**, with correlation across the three
+  pillars.
+- **Distributed tracing** with configurable sampling.
+- **Alerts** with multiple notification destinations.
+- **Ticket portal** and **support e-mail** for opening tickets.
+- **Usage panel** with consumption and overage projection for the cycle.
 
-## Segurança
+## Security
 
-- **Criptografia** de dados em trânsito e em repouso, igual aos demais planos.
-- **Autenticação por e-mail e senha**, com verificação em duas etapas opcional.
-- **Sem Single Sign-On (SSO)** e **sem provisionamento via SCIM**.
-- **Sem controle de acesso baseado em papéis (RBAC)** e **sem trilhas de auditoria**.
-- Sem restrição de acesso por rede ou lista de IPs permitidos.
+- **Encryption** of data in transit and at rest, the same as the other plans.
+- **E-mail and password authentication**, with optional two-step verification.
+- **No Single Sign-On (SSO)** and **no SCIM provisioning**.
+- **No role-based access control (RBAC)** and **no audit trails**.
+- No network access restriction or IP allowlist.
 
-SSO, SCIM, RBAC, auditoria e políticas de governança de dados são exclusivos do plano
-Enterprise. Organizações com essa exigência devem avaliar o upgrade.
+SSO, SCIM, RBAC, auditing and data governance policies are exclusive to the Enterprise
+plan. Organizations with these requirements should consider upgrading.
 
-## Gestão de Usuários e Acessos
+## User and Access Management
 
-- Convite de até 20 usuários por e-mail.
-- Organização de usuários em **times**, para separar dashboards e alertas.
-- Permissões simplificadas, sem papéis customizáveis por recurso.
-- Provisionamento e desprovisionamento **manuais**, sem SCIM.
+- Invite up to 20 users by e-mail.
+- Organize users into **teams**, to separate dashboards and alerts.
+- Simplified permissions, without customizable per-resource roles.
+- **Manual** provisioning and deprovisioning, without SCIM.
 
-## Onboarding e Adoção
+## Onboarding and Adoption
 
-O onboarding do Pro é **self-service**, com apoio da documentação:
+Pro onboarding is **self-service**, supported by the documentation:
 
-1. **Upgrade:** contratação direta no painel, com cartão de crédito.
-2. **Instalação do agente:** guia de início rápido e integrações prontas.
-3. **Configuração de alertas:** modelos de alerta para os serviços mais comuns.
-4. **Acompanhamento:** o próprio time acompanha adoção pelo painel de uso.
+1. **Upgrade:** direct purchase in the panel, with a credit card.
+2. **Agent installation:** quick start guide and ready-made integrations.
+3. **Alert setup:** alert templates for the most common services.
+4. **Follow-up:** the team tracks adoption itself through the usage panel.
 
-Não há kickoff assistido, plano de sucesso nem gerente de conta neste plano — esses
-recursos são exclusivos do Enterprise.
+There is no assisted kickoff, success plan or account manager on this plan — those are
+exclusive to Enterprise.
 
-## Suporte
+## Support
 
-Atendimento em **horário comercial**, de segunda a sexta-feira (ver documento de SLA de
-suporte):
+Service during **business hours**, Monday to Friday (see the support SLA document):
 
-- **P1:** resposta em até 8 horas úteis.
-- **P2:** resposta em até 1 dia útil.
-- **P3:** resposta em até 3 dias úteis.
+- **P1:** response within 8 business hours.
+- **P2:** response within 1 business day.
+- **P3:** response within 3 business days.
 
-Canais disponíveis:
+Available channels:
 
-- **E-mail de suporte:** suporte@fcai.example.com.
-- **Portal de chamados:** abertura e acompanhamento de tickets.
-- **Base de conhecimento** e comunidade.
+- **Support e-mail:** support@fcai.example.com.
+- **Ticket portal:** opening and tracking tickets.
+- **Knowledge base** and community.
 
-Não há cobertura 24x7, canal dedicado, telefone de emergência para P1, gerente de conta
-nem relatório de causa raiz — todos exclusivos do Enterprise.
+There is no 24x7 coverage, dedicated channel, P1 emergency phone line, account manager
+or root cause report — all exclusive to Enterprise.
 
-## Condições Comerciais
+## Commercial Terms
 
-- **Preço: R$ 499/mês** na cobrança mensal, ou **R$ 5.090/ano** na cobrança anual.
-- A contratação **anual** tem **15% de desconto** em relação ao valor mensal equivalente.
-- Contratação **self-service**, sem contrato comercial.
-- **Cobrança recorrente por cartão de crédito**, com emissão de nota fiscal.
-- **Trial de 14 dias** dos recursos do Pro, sem necessidade de cartão de crédito.
-- **Reembolso** em até **7 dias corridos** após a contratação, conforme o direito de
-  arrependimento. Após esse prazo, não há reembolso proporcional.
+- **Price: R$ 499/month** with monthly billing, or **R$ 5,090/year** with yearly
+  billing.
+- The **yearly** subscription has a **15% discount** compared to the equivalent monthly
+  price.
+- **Self-service** purchase, without a commercial contract.
+- **Recurring credit card billing**, with an invoice issued.
+- **14-day trial** of Pro features, with no credit card required.
+- **Refund** within **7 calendar days** after purchase, according to the right of
+  withdrawal. After that period, there is no prorated refund.
 
-### Upgrade e Downgrade
+### Upgrade and Downgrade
 
-O upgrade a partir do Starter é imediato, com cobrança proporcional (pro rata) ao
-período restante do ciclo. No cancelamento, o acesso permanece ativo até o fim do ciclo
-já pago, no plano mensal, ou até o fim do período contratado, no plano anual.
+Upgrading from Starter is immediate, with a charge prorated to the remaining period of
+the cycle. On cancellation, access remains active until the end of the cycle already
+paid, on the monthly plan, or until the end of the contracted period, on the yearly
+plan.
 
-## Disponibilidade
+## Availability
 
-O Pro tem meta de disponibilidade de **99,5%** ao mês, **informativa e sem crédito de
-SLA**. A política de créditos é exclusiva do Enterprise, que tem meta de 99,9%. A
-disponibilidade é medida mensalmente, excluindo janelas de manutenção programada, e
-reportada na central de status.
+Pro has a monthly availability target of **99.5%**, **informational and with no SLA
+credit**. The credit policy is exclusive to Enterprise, whose target is 99.9%.
+Availability is measured monthly, excluding scheduled maintenance windows, and reported
+on the status page.
 
-## Diferenças em Relação aos Planos Starter e Enterprise
+## Differences Compared to the Starter and Enterprise Plans
 
-| Aspecto | Starter | Pro | Enterprise |
+| Aspect | Starter | Pro | Enterprise |
 | --- | --- | --- | --- |
-| Usuários | 3 | até 20 | ilimitados |
-| Retenção de dados | 7 dias | 30 dias | até 15 meses |
-| Ingestão de logs | 5 GB/mês | 100 GB/mês | por contrato |
-| Consumo excedente | não (ingestão pausada) | cobrado por GB | conforme contrato |
-| Suporte | comunidade | SLA padrão (comercial) | SLA reduzido, 24x7 |
-| SSO / RBAC / Auditoria | não | não | sim |
-| Faturamento | — | cartão | corporativo por contrato |
-| Gerente de conta | não | não | sim |
-| Meta de disponibilidade | — | 99,5% (informativa) | 99,9% (com crédito) |
+| Users | 3 | up to 20 | unlimited |
+| Data retention | 7 days | 30 days | up to 15 months |
+| Log ingestion | 5 GB/month | 100 GB/month | by contract |
+| Overage | no (ingestion paused) | billed per GB | per contract |
+| Support | community | standard SLA (business hours) | shorter SLA, 24x7 |
+| SSO / RBAC / Audit | no | no | yes |
+| Billing | — | card | corporate, by contract |
+| Account manager | no | no | yes |
+| Availability target | — | 99.5% (informational) | 99.9% (with credit) |
 
-Em resumo, o Pro é o meio-termo: limites de produção e SLA formal em horário comercial,
-mantendo a simplicidade do self-service. Quem precisa de segurança avançada, suporte
-24x7, crédito de SLA ou faturamento corporativo deve avaliar o Enterprise.
+In short, Pro is the middle ground: production limits and a formal business-hours SLA,
+while keeping the simplicity of self-service. Anyone who needs advanced security, 24x7
+support, SLA credits or corporate invoicing should consider Enterprise.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**Quanto custa o plano Pro?**
-R$ 499/mês na cobrança mensal ou R$ 5.090/ano na cobrança anual, com 15% de desconto.
+**How much does the Pro plan cost?**
+R$ 499/month with monthly billing or R$ 5,090/year with yearly billing, with a 15%
+discount.
 
-**Quantos usuários o Pro permite?**
-Até 20 usuários na mesma organização.
+**How many users does Pro allow?**
+Up to 20 users in the same organization.
 
-**Qual é o tempo de resposta para P1 no Pro?**
-Até 8 horas úteis, em horário comercial, de segunda a sexta-feira.
+**What is the P1 response time on Pro?**
+Up to 8 business hours, during business hours, Monday to Friday.
 
-**O Pro tem SSO?**
-Não. SSO, SCIM, RBAC e trilhas de auditoria são exclusivos do plano Enterprise.
+**Does Pro have SSO?**
+No. SSO, SCIM, RBAC and audit trails are exclusive to the Enterprise plan.
 
-**O que acontece se eu ultrapassar os 100 GB de ingestão?**
-O volume adicional é cobrado como consumo excedente, por GB, no fechamento do ciclo.
+**What happens if I exceed the 100 GB of ingestion?**
+The additional volume is billed as overage, per GB, at the close of the cycle.
 
-**O Pro tem crédito de SLA?**
-Não. A meta de 99,5% é informativa. O crédito de SLA é exclusivo do Enterprise.
+**Does Pro have SLA credits?**
+No. The 99.5% target is informational. SLA credits are exclusive to Enterprise.

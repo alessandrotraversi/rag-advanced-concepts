@@ -8,7 +8,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "question": "Qual é o SLA para incidentes P1 no plano Enterprise?"
+  "question": "What is the SLA for P1 incidents on the Enterprise plan?"
 }
 
 ### Chat: with debug (query plan, retrieved chunks, selected chunks)
@@ -16,7 +16,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "question": "Qual é o SLA para incidentes P1 no plano Enterprise?",
+  "question": "What is the SLA for P1 incidents on the Enterprise plan?",
   "debug": true
 }
 
@@ -25,7 +25,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "question": "Quais formas de pagamento o FCAI Cloud aceita?",
+  "question": "Which payment methods does FCAI Cloud accept?",
   "use_rerank": false,
   "debug": true
 }
@@ -35,7 +35,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "question": "Como funciona o suporte no plano da empresa?"
+  "question": "How does support work on the company plan?"
 }
 
 ### Chat: answer not in the knowledge base
@@ -43,7 +43,7 @@ POST {{baseUrl}}/chat
 Content-Type: application/json
 
 {
-  "question": "Qual é a capital da França?"
+  "question": "What is the capital of France?"
 }
 
 ### Chat: empty question (returns 400)

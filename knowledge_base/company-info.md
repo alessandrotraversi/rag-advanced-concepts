@@ -1,5 +1,5 @@
 ---
-title: Informações da Empresa
+title: Company Information
 tenant: fcai
 product: fcai-cloud
 plan: all
@@ -9,195 +9,191 @@ status: published
 visibility: internal
 ---
 
-# Informações da Empresa
+# Company Information
 
-A **FCAI Tecnologia Ltda.** é uma empresa fictícia de software B2B que desenvolve e
-opera a plataforma **FCAI Cloud**, uma solução de observabilidade em nuvem para
-métricas, logs e traces de aplicações. Este documento reúne as principais
-informações institucionais da empresa, servindo como referência para times internos,
-parceiros e para a base de conhecimento de suporte. Todos os dados aqui apresentados
-são fictícios e existem apenas para fins de exemplo e testes de RAG.
+**FCAI Tecnologia Ltda.** is a fictitious B2B software company that develops and
+operates the **FCAI Cloud** platform, a cloud observability solution for application
+metrics, logs and traces. This document gathers the company's main institutional
+information and serves as a reference for internal teams, partners and the support
+knowledge base. All data presented here is fictitious and exists only for example and
+RAG testing purposes.
 
-## Dados Cadastrais
+## Registration Data
 
-- Razão social: FCAI Tecnologia Ltda.
-- Nome fantasia: FCAI
-- CNPJ: 12.345.678/0001-90 (fictício)
-- Inscrição estadual: isenta
-- Fundação: março de 2019
-- Regime tributário: Lucro Presumido (dado fictício)
-- Sede: Av. das Nuvens, 1000, 12º andar, São Paulo — SP, CEP 01000-000, Brasil
-- Escritório internacional: Rua da Observabilidade, 42, Lisboa, Portugal
-- Website institucional: https://fcai.example.com
+- Legal name: FCAI Tecnologia Ltda.
+- Trade name: FCAI
+- CNPJ (Brazilian company tax ID): 12.345.678/0001-90 (fictitious)
+- State registration: exempt
+- Founded: March 2019
+- Tax regime: Presumed Profit (fictitious data)
+- Headquarters: Av. das Nuvens, 1000, 12th floor, São Paulo — SP, ZIP 01000-000, Brazil
+- International office: Rua da Observabilidade, 42, Lisbon, Portugal
+- Corporate website: https://fcai.example.com
 
-## História
+## History
 
-A FCAI foi fundada em 2019 por um grupo de engenheiros de plataforma que enfrentavam,
-no dia a dia, a dificuldade de correlacionar métricas, logs e traces em ferramentas
-separadas. A proposta inicial era simples: unificar os três pilares da observabilidade
-em um único produto, com uma experiência de uso coerente.
+FCAI was founded in 2019 by a group of platform engineers who struggled, day after day,
+to correlate metrics, logs and traces across separate tools. The initial proposal was
+simple: unify the three pillars of observability in a single product, with a coherent
+user experience.
 
-- **2019:** fundação da empresa e primeira versão do produto, focada apenas em métricas.
-- **2020:** lançamento da centralização de logs e das primeiras integrações com
-  Kubernetes.
-- **2021:** introdução de tracing distribuído compatível com OpenTelemetry.
-- **2022:** lançamento do plano Enterprise, com SSO, RBAC e suporte 24x7.
-- **2023:** abertura do escritório em Lisboa e expansão para clientes na Europa.
-- **2024:** introdução de alertas inteligentes e detecção de anomalias.
-- **2025:** consolidação da plataforma com dashboards colaborativos e relatórios de
-  conformidade.
-- **2026:** foco em automação de resposta a incidentes e correlação assistida.
+- **2019:** company founded and first product version, focused on metrics only.
+- **2020:** log centralization launched, along with the first Kubernetes integrations.
+- **2021:** distributed tracing compatible with OpenTelemetry introduced.
+- **2022:** Enterprise plan launched, with SSO, RBAC and 24x7 support.
+- **2023:** Lisbon office opened and expansion to customers in Europe.
+- **2024:** smart alerts and anomaly detection introduced.
+- **2025:** platform consolidated with collaborative dashboards and compliance reports.
+- **2026:** focus on incident response automation and assisted correlation.
 
-Todos os marcos e datas acima são fictícios e servem apenas para fins de exemplo.
+All milestones and dates above are fictitious and serve only as examples.
 
-## Missão, Visão e Valores
+## Mission, Vision and Values
 
-### Missão
+### Mission
 
-Ajudar times de engenharia a enxergar o comportamento de seus sistemas em tempo real,
-reduzindo o tempo de detecção e de resolução de incidentes.
+Help engineering teams see how their systems behave in real time, reducing the time to
+detect and resolve incidents.
 
-### Visão
+### Vision
 
-Ser a plataforma de observabilidade de referência para empresas que valorizam
-confiabilidade, clareza de dados e autonomia dos times técnicos.
+To be the reference observability platform for companies that value reliability, data
+clarity and the autonomy of technical teams.
 
-### Valores
+### Values
 
-- **Clareza acima de complexidade:** dados devem contar uma história compreensível.
-- **Confiabilidade:** a plataforma precisa estar disponível quando o cliente mais
-  precisa, especialmente durante incidentes.
-- **Transparência:** comunicação honesta sobre incidentes, limitações e roadmap.
-- **Autonomia do cliente:** ferramentas que capacitam o time, sem dependência
-  excessiva do fornecedor.
-- **Segurança por padrão:** decisões de produto consideram privacidade e proteção de
-  dados desde o início.
+- **Clarity over complexity:** data should tell an understandable story.
+- **Reliability:** the platform must be available when the customer needs it most,
+  especially during incidents.
+- **Transparency:** honest communication about incidents, limitations and roadmap.
+- **Customer autonomy:** tools that empower the team, without excessive dependence on
+  the vendor.
+- **Security by default:** product decisions take privacy and data protection into
+  account from the start.
 
-## Produtos
+## Products
 
-O principal produto é o **FCAI Cloud**, disponível nos planos Starter, Pro e
-Enterprise. A plataforma cobre quatro áreas principais:
+The main product is **FCAI Cloud**, available in the Starter, Pro and Enterprise plans.
+The platform covers four main areas:
 
-- Coleta e visualização de métricas de infraestrutura e aplicação.
-- Centralização, busca e retenção de logs.
-- Tracing distribuído de requisições entre serviços.
-- Alertas e notificações com múltiplos canais.
+- Collection and visualization of infrastructure and application metrics.
+- Log centralization, search and retention.
+- Distributed tracing of requests across services.
+- Alerts and notifications through multiple channels.
 
-Detalhes de recursos e planos estão descritos no documento de visão geral do produto.
+Feature and plan details are described in the product overview document.
 
-## Estrutura Organizacional
+## Organizational Structure
 
-A empresa está organizada em áreas fictícias que refletem uma operação típica de SaaS:
+The company is organized into fictitious areas that reflect a typical SaaS operation:
 
-- **Engenharia de Produto:** desenvolvimento da plataforma FCAI Cloud.
-- **Engenharia de Confiabilidade (SRE):** operação, disponibilidade e resposta a
-  incidentes internos.
-- **Suporte ao Cliente:** atendimento aos chamados conforme o SLA de cada plano.
-- **Sucesso do Cliente:** acompanhamento de contas Enterprise e adoção do produto.
-- **Comercial:** contratação, renovação e condições comerciais.
-- **Financeiro:** faturamento, cobrança e emissão de notas fiscais.
-- **Segurança da Informação:** governança de segurança, conformidade e resposta a
-  incidentes de segurança.
+- **Product Engineering:** development of the FCAI Cloud platform.
+- **Site Reliability Engineering (SRE):** operations, availability and internal
+  incident response.
+- **Customer Support:** handling tickets according to each plan's SLA.
+- **Customer Success:** follow-up of Enterprise accounts and product adoption.
+- **Sales:** purchasing, renewal and commercial terms.
+- **Finance:** billing, collections and invoice issuance.
+- **Information Security:** security governance, compliance and security incident
+  response.
 
-### Liderança (fictícia)
+### Leadership (fictitious)
 
-- **CEO:** responsável pela estratégia geral e relação com investidores.
-- **CTO:** responsável pela direção técnica e pela plataforma.
-- **VP de Engenharia:** responsável pelos times de produto e de confiabilidade.
-- **VP de Operações:** responsável por suporte, sucesso do cliente e financeiro.
+- **CEO:** responsible for overall strategy and investor relations.
+- **CTO:** responsible for technical direction and the platform.
+- **VP of Engineering:** responsible for the product and reliability teams.
+- **VP of Operations:** responsible for support, customer success and finance.
 
-Os cargos e responsabilidades acima são ilustrativos e não representam pessoas reais.
+The roles and responsibilities above are illustrative and do not represent real people.
 
-## Escritórios e Presença
+## Offices and Presence
 
-- **São Paulo (sede):** engenharia, comercial e financeiro.
-- **Lisboa:** suporte e sucesso do cliente para a região europeia.
-- **Times remotos:** parte da engenharia opera de forma distribuída em fuso horário
-  compatível com o Brasil.
+- **São Paulo (headquarters):** engineering, sales and finance.
+- **Lisbon:** support and customer success for the European region.
+- **Remote teams:** part of engineering works in a distributed way, in time zones
+  compatible with Brazil.
 
-### Residência de Dados
+### Data Residency
 
-Os clientes escolhem a região de armazenamento no momento da criação da organização.
-As regiões fictícias disponíveis são **Brasil (São Paulo)** e **Europa (Lisboa)**. A
-região definida no início não pode ser alterada sem uma migração assistida conduzida
-pelo time de suporte.
+Customers choose the storage region when the organization is created. The fictitious
+regions available are **Brazil (São Paulo)** and **Europe (Lisbon)**. The region chosen
+at the start cannot be changed without an assisted migration run by the support team.
 
-## Canais de Atendimento
+## Contact Channels
 
-- Site: https://fcai.example.com
-- Suporte: suporte@fcai.example.com
-- Comercial: comercial@fcai.example.com
-- Financeiro: financeiro@fcai.example.com
-- Segurança: seguranca@fcai.example.com
-- Central de status: https://status.fcai.example.com
-- Documentação: https://docs.fcai.example.com
-- Central de ajuda: https://ajuda.fcai.example.com
+- Website: https://fcai.example.com
+- Support: support@fcai.example.com
+- Sales: sales@fcai.example.com
+- Billing: billing@fcai.example.com
+- Security: security@fcai.example.com
+- Status page: https://status.fcai.example.com
+- Documentation: https://docs.fcai.example.com
+- Help center: https://help.fcai.example.com
 
-## Horário de Funcionamento
+## Business Hours
 
-O atendimento comercial e financeiro funciona de segunda a sexta, das 9h às 18h
-(horário de Brasília), exceto feriados nacionais. O suporte técnico segue os prazos
-definidos no SLA de cada plano, incluindo cobertura 24x7 para chamados críticos do
-plano Enterprise.
+Sales and billing service runs Monday to Friday, from 9 a.m. to 6 p.m. (Brasília time),
+except national holidays. Technical support follows the deadlines defined in each
+plan's SLA, including 24x7 coverage for critical tickets on the Enterprise plan.
 
-## Segurança e Conformidade
+## Security and Compliance
 
-A FCAI mantém práticas de segurança da informação alinhadas a padrões de mercado.
-Entre os controles fictícios adotados estão:
+FCAI maintains information security practices aligned with market standards. Among the
+fictitious controls adopted are:
 
-- Criptografia de dados em trânsito e em repouso.
-- Controle de acesso baseado em papéis para colaboradores internos.
-- Trilhas de auditoria de acesso a dados de clientes.
-- Testes de segurança periódicos e programa de gestão de vulnerabilidades.
-- Programa de divulgação responsável de vulnerabilidades (responsible disclosure).
-- Revisões periódicas de acesso e princípio do menor privilégio.
+- Encryption of data in transit and at rest.
+- Role-based access control for internal employees.
+- Audit trails of access to customer data.
+- Periodic security testing and a vulnerability management program.
+- A responsible vulnerability disclosure program.
+- Periodic access reviews and the principle of least privilege.
 
-Relatórios de conformidade podem ser disponibilizados a clientes Enterprise sob
-acordo de confidencialidade. Os relatórios e certificações citados neste projeto são
-fictícios.
+Compliance reports can be made available to Enterprise customers under a
+non-disclosure agreement. The reports and certifications mentioned in this project are
+fictitious.
 
-### Subprocessadores
+### Subprocessors
 
-A operação da plataforma depende de subprocessadores fictícios, como provedores de
-nuvem para computação e armazenamento e serviços de envio de e-mail transacional. A
-lista de subprocessadores é mantida na documentação e atualizada quando há mudanças
-relevantes.
+Platform operations rely on fictitious subprocessors, such as cloud providers for
+compute and storage and transactional e-mail services. The list of subprocessors is
+kept in the documentation and updated whenever there are relevant changes.
 
-## Privacidade e Proteção de Dados
+## Privacy and Data Protection
 
-A FCAI trata dados pessoais conforme a legislação aplicável. O cliente é o controlador
-dos dados que envia à plataforma, e a FCAI atua como operadora. Solicitações
-relacionadas a titulares de dados devem ser encaminhadas para privacidade@fcai.example.com.
+FCAI processes personal data according to applicable law. The customer is the
+controller of the data sent to the platform, and FCAI acts as the processor. Requests
+related to data subjects must be sent to privacy@fcai.example.com.
 
-## Parceiros e Ecossistema
+## Partners and Ecosystem
 
-A FCAI mantém um ecossistema fictício de parceiros de integração e revenda, incluindo
-provedores de nuvem, consultorias de engenharia de plataforma e ferramentas de
-incidentes. Parcerias comerciais são tratadas caso a caso pelo time comercial.
+FCAI maintains a fictitious ecosystem of integration and reseller partners, including
+cloud providers, platform engineering consultancies and incident tools. Commercial
+partnerships are handled case by case by the sales team.
 
-## Marca e Identidade
+## Brand and Identity
 
-O uso do nome e da marca FCAI segue as diretrizes internas de identidade visual.
-Parceiros e clientes que desejem exibir a marca em materiais devem solicitar aprovação
-prévia pelo e-mail imprensa@fcai.example.com. Não é permitido alterar cores,
-proporções ou aplicar efeitos ao logotipo sem autorização.
+Use of the FCAI name and brand follows the internal visual identity guidelines.
+Partners and customers who want to display the brand in their materials must request
+prior approval at press@fcai.example.com. Changing colors or proportions, or applying
+effects to the logo, is not allowed without authorization.
 
-## Contato para Imprensa
+## Press Contact
 
-Solicitações de imprensa e uso de marca devem ser encaminhadas para
-imprensa@fcai.example.com. O uso do nome e da marca FCAI segue as diretrizes internas
-de identidade visual.
+Press requests and brand usage requests must be sent to press@fcai.example.com. Use of
+the FCAI name and brand follows the internal visual identity guidelines.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**A FCAI é uma empresa real?**
-Não. A FCAI é uma empresa fictícia usada como exemplo em um projeto educacional de RAG.
+**Is FCAI a real company?**
+No. FCAI is a fictitious company used as an example in an educational RAG project.
 
-**Onde os dados são armazenados?**
-Na região escolhida na criação da organização: Brasil (São Paulo) ou Europa (Lisboa).
+**Where is the data stored?**
+In the region chosen when the organization was created: Brazil (São Paulo) or Europe
+(Lisbon).
 
-**Como falo com o suporte?**
-Pelos canais definidos no SLA do seu plano, começando por suporte@fcai.example.com.
+**How do I contact support?**
+Through the channels defined in your plan's SLA, starting with support@fcai.example.com.
 
-**A empresa tem escritório físico?**
-Neste cenário fictício, há a sede em São Paulo e um escritório em Lisboa.
+**Does the company have a physical office?**
+In this fictitious scenario, there is the headquarters in São Paulo and an office in
+Lisbon.

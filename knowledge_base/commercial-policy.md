@@ -1,5 +1,5 @@
 ---
-title: Política Comercial
+title: Commercial Policy
 tenant: fcai
 product: fcai-cloud
 plan: all
@@ -9,163 +9,164 @@ status: published
 visibility: internal
 ---
 
-# Política Comercial
+# Commercial Policy
 
-Este documento descreve as condições comerciais do **FCAI Cloud**, incluindo
-contratação, planos e preços, descontos, mudança de plano, renovação, período de
-avaliação, add-ons, reembolso e condições especiais. Os valores citados são fictícios
-e existem apenas para fins de exemplo.
+This document describes the commercial terms of **FCAI Cloud**, including purchasing,
+plans and prices, discounts, plan changes, renewal, trial period, add-ons, refunds and
+special conditions. The amounts mentioned are fictitious and exist only as examples.
 
-## Princípios Gerais
+## General Principles
 
-- Transparência de preços e condições antes da contratação.
-- Comunicação prévia de reajustes e mudanças relevantes.
-- Autonomia do cliente para fazer upgrade, downgrade e cancelamento pelo painel.
-- Condições especiais formalizadas por escrito para o plano Enterprise.
+- Transparent prices and terms before purchase.
+- Advance notice of price adjustments and relevant changes.
+- Customer autonomy to upgrade, downgrade and cancel through the panel.
+- Special conditions formalized in writing for the Enterprise plan.
 
-## Modelos de Contratação
+## Purchasing Models
 
-- O plano **Starter** é gratuito e não exige contrato nem cartão de crédito.
-- O plano **Pro** é contratado de forma self-service, com cobrança recorrente mensal
-  ou anual.
-- O plano **Enterprise** é formalizado por meio de contrato comercial com condições
-  personalizadas, negociado com o time comercial.
+- The **Starter** plan is free and requires neither a contract nor a credit card.
+- The **Pro** plan is purchased self-service, with recurring monthly or yearly
+  billing.
+- The **Enterprise** plan is formalized through a commercial contract with customized
+  terms, negotiated with the sales team.
 
-## Planos e Preços
+## Plans and Prices
 
-Os preços de referência (fictícios) são:
+The reference (fictitious) prices are:
 
-- **Starter:** R$ 0/mês.
-- **Pro:** R$ 499/mês na cobrança mensal, ou R$ 5.090/ano na cobrança anual.
-- **Enterprise:** sob consulta, conforme volume de ingestão, número de usuários e
-  requisitos de segurança e suporte.
+- **Starter:** R$ 0/month.
+- **Pro:** R$ 499/month with monthly billing, or R$ 5,090/year with yearly billing.
+- **Enterprise:** on request, based on ingestion volume, number of users and security
+  and support requirements.
 
-Os preços podem ser reajustados anualmente. Reajustes são comunicados com pelo menos
-30 dias de antecedência e passam a valer no ciclo de renovação seguinte. Para contratos
-Enterprise, o reajuste segue o índice e a periodicidade definidos em contrato.
+Prices may be adjusted yearly. Adjustments are communicated at least 30 days in advance
+and take effect on the next renewal cycle. For Enterprise contracts, the adjustment
+follows the index and frequency defined in the contract.
 
-### Comparativo Comercial
+### Commercial Comparison
 
-| Aspecto | Starter | Pro | Enterprise |
+| Aspect | Starter | Pro | Enterprise |
 | --- | --- | --- | --- |
-| Preço | R$ 0 | R$ 499/mês | sob consulta |
-| Contrato | não | não | sim |
-| Forma de pagamento | — | cartão | corporativo |
-| Desconto anual | — | 15% | negociado |
-| Gerente de conta | não | não | sim |
+| Price | R$ 0 | R$ 499/month | on request |
+| Contract | no | no | yes |
+| Payment method | — | card | corporate |
+| Yearly discount | — | 15% | negotiated |
+| Account manager | no | no | yes |
 
-## Período de Avaliação (Trial)
+## Trial Period
 
-Novos clientes podem avaliar recursos do plano Pro por um período de **14 dias**, sem
-necessidade de cartão de crédito. Ao final do trial:
+New customers can try Pro plan features for **14 days**, with no credit card required.
+At the end of the trial:
 
-- Se não houver upgrade, a organização retorna automaticamente aos limites do Starter.
-- Dados que excedem os limites do Starter podem ser arquivados ou removidos conforme
-  a política de retenção.
+- If there is no upgrade, the organization automatically returns to the Starter limits.
+- Data exceeding the Starter limits may be archived or removed according to the
+  retention policy.
 
-Trials do plano Enterprise são conduzidos junto ao time comercial, com escopo e prazo
-definidos caso a caso. Durante o trial Enterprise, é possível configurar uma prova de
-conceito (PoC) com dados reais em uma organização isolada.
+Enterprise plan trials are run together with the sales team, with scope and duration
+defined case by case. During an Enterprise trial, a proof of concept (PoC) with real
+data can be set up in an isolated organization.
 
-## Descontos
+## Discounts
 
-- Contratação **anual** do plano Pro tem **15% de desconto** em relação ao valor mensal
-  equivalente.
-- **Descontos por volume** no Enterprise são negociados conforme a quantidade de
-  usuários e o volume de ingestão contratado.
-- **Organizações sem fins lucrativos** e **projetos educacionais** podem solicitar
-  condições especiais junto ao time comercial, sujeitas a comprovação.
-- Descontos promocionais, quando existirem, têm prazo de validade e não são
-  cumulativos com outros descontos, salvo indicação em contrário.
-- **Programa de indicação** (fictício): clientes que indicam novas contas podem receber
-  créditos aplicáveis em faturas futuras.
+- **Yearly** Pro subscriptions get a **15% discount** compared to the equivalent
+  monthly price.
+- **Volume discounts** on Enterprise are negotiated based on the number of users and
+  the contracted ingestion volume.
+- **Non-profit organizations** and **educational projects** may request special
+  conditions from the sales team, subject to proof.
+- Promotional discounts, when available, have an expiration date and cannot be combined
+  with other discounts unless stated otherwise.
+- **Referral program** (fictitious): customers who refer new accounts may receive
+  credits applicable to future invoices.
 
-## Mudança de Plano
+## Plan Changes
 
 ### Upgrade
 
-- O **upgrade** de plano é aplicado imediatamente.
-- A cobrança é proporcional (pro rata) ao período restante do ciclo atual.
-- Os novos limites de usuários, retenção e ingestão passam a valer no ato do upgrade.
+- A plan **upgrade** is applied immediately.
+- The charge is prorated to the remaining period of the current cycle.
+- The new user, retention and ingestion limits take effect at the moment of the
+  upgrade.
 
 ### Downgrade
 
-- O **downgrade** passa a valer no início do próximo ciclo de faturamento.
-- Ao reduzir o plano, os limites do novo plano são aplicados; dados e configurações que
-  excedam esses limites podem ser arquivados ou removidos.
-- Não há reembolso proporcional pelo período já contratado no plano anterior.
+- A **downgrade** takes effect at the start of the next billing cycle.
+- When downgrading, the new plan limits are applied; data and settings exceeding those
+  limits may be archived or removed.
+- There is no prorated refund for the period already paid on the previous plan.
 
-### Migração entre Ciclos
+### Switching Between Cycles
 
-A troca de cobrança mensal para anual pode ser feita a qualquer momento e aplica o
-desconto anual a partir da mudança. A troca de anual para mensal passa a valer apenas
-na renovação seguinte.
+Switching from monthly to yearly billing can be done at any time and applies the yearly
+discount from the moment of the change. Switching from yearly to monthly only takes
+effect at the next renewal.
 
-## Renovação
+## Renewal
 
-- Planos **mensais** renovam automaticamente a cada ciclo, na mesma forma de pagamento.
-- Planos **anuais** renovam automaticamente ao fim de 12 meses, salvo cancelamento
-  solicitado com pelo menos **30 dias de antecedência** da data de renovação.
-- Contratos **Enterprise** seguem as regras de renovação e reajuste definidas em
-  contrato, incluindo eventuais cláusulas de renovação automática.
+- **Monthly** plans renew automatically every cycle, with the same payment method.
+- **Yearly** plans renew automatically after 12 months, unless cancellation is
+  requested at least **30 days before** the renewal date.
+- **Enterprise** contracts follow the renewal and adjustment rules defined in the
+  contract, including any automatic renewal clauses.
 
-## Cancelamento
+## Cancellation
 
-O cancelamento de planos pagos pode ser solicitado a qualquer momento pelo painel ou
-pelo time comercial. Efeitos do cancelamento:
+Cancellation of paid plans can be requested at any time through the panel or the sales
+team. Effects of cancellation:
 
-- No plano **Pro mensal**, o acesso permanece ativo até o fim do ciclo já pago.
-- No plano **Pro anual**, o acesso permanece ativo até o fim do período contratado,
-  sem reembolso proporcional após o prazo de arrependimento.
-- No **Enterprise**, o cancelamento segue as condições e prazos definidos em contrato.
+- On the **monthly Pro** plan, access remains active until the end of the cycle already
+  paid.
+- On the **yearly Pro** plan, access remains active until the end of the contracted
+  period, with no prorated refund after the withdrawal period.
+- On **Enterprise**, cancellation follows the terms and deadlines defined in the
+  contract.
 
-Após o cancelamento e o término do período de acesso, os dados entram no processo de
-retenção e exclusão descrito na documentação e na política de faturamento.
+After cancellation and the end of the access period, the data enters the retention and
+deletion process described in the documentation and in the billing policy.
 
-## Reembolso
+## Refunds
 
-- O reembolso do plano **Pro** pode ser solicitado em até **7 dias corridos** após a
-  contratação, conforme o direito de arrependimento.
-- Após esse prazo, não há reembolso proporcional para planos já em uso.
-- Condições de reembolso do **Enterprise** são tratadas exclusivamente por contrato.
-- Consumo excedente já faturado não é reembolsável.
+- A **Pro** plan refund can be requested up to **7 calendar days** after purchase,
+  according to the right of withdrawal.
+- After that period, there is no prorated refund for plans already in use.
+- **Enterprise** refund terms are handled exclusively by contract.
+- Overage that has already been invoiced is non-refundable.
 
-## Add-ons e Serviços Adicionais
+## Add-ons and Additional Services
 
-Além do plano base, a FCAI oferece add-ons fictícios que podem ser contratados
-separadamente:
+Besides the base plan, FCAI offers fictitious add-ons that can be purchased separately:
 
-- **Retenção estendida:** aumento do período de retenção de logs e métricas.
-- **Ingestão adicional:** pacotes de volume de ingestão para além da cota do plano.
-- **Onboarding assistido:** acompanhamento dedicado na implantação (incluso no
-  Enterprise).
-- **Ambiente dedicado:** isolamento adicional de recursos, disponível no Enterprise.
-- **Treinamento avançado:** sessões de capacitação para times grandes.
+- **Extended retention:** a longer retention period for logs and metrics.
+- **Additional ingestion:** ingestion volume packs beyond the plan quota.
+- **Assisted onboarding:** dedicated support during rollout (included in Enterprise).
+- **Dedicated environment:** additional resource isolation, available on Enterprise.
+- **Advanced training:** training sessions for large teams.
 
-## Processo de Compra
+## Purchase Process
 
-1. O cliente escolhe o plano no site ou fala com o time comercial (Enterprise).
-2. No Pro, a contratação é imediata via cartão; no Enterprise, há proposta e contrato.
-3. A ativação ocorre após a confirmação do pagamento ou da assinatura do contrato.
-4. O cliente recebe as instruções de onboarding e acesso ao painel.
+1. The customer picks the plan on the website or talks to the sales team (Enterprise).
+2. On Pro, purchase is immediate by card; on Enterprise, there is a proposal and a
+   contract.
+3. Activation happens after payment confirmation or contract signature.
+4. The customer receives onboarding instructions and access to the panel.
 
-## Condições Comerciais Especiais
+## Special Commercial Conditions
 
-Condições especiais, como faturamento em moeda estrangeira, prazos de pagamento
-estendidos e SLAs comerciais específicos, são avaliadas caso a caso para clientes
-Enterprise e formalizadas em contrato. O time comercial é o ponto de contato para
-qualquer negociação fora das condições padrão descritas neste documento.
+Special conditions, such as billing in a foreign currency, extended payment terms and
+specific commercial SLAs, are evaluated case by case for Enterprise customers and
+formalized in the contract. The sales team is the point of contact for any negotiation
+outside the standard terms described in this document.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**Posso testar antes de pagar?**
-Sim, há um trial de 14 dias do plano Pro sem cartão de crédito.
+**Can I try before paying?**
+Yes, there is a 14-day Pro plan trial with no credit card required.
 
-**O desconto anual vale para o Enterprise?**
-No Enterprise os descontos são negociados por contrato, não seguem a tabela do Pro.
+**Does the yearly discount apply to Enterprise?**
+On Enterprise, discounts are negotiated by contract and do not follow the Pro table.
 
-**Como faço upgrade?**
-Pelo painel, com cobrança proporcional ao período restante do ciclo.
+**How do I upgrade?**
+Through the panel, with a charge prorated to the remaining period of the cycle.
 
-**Tem multa por cancelamento?**
-No Pro não há multa; no Enterprise valem as condições do contrato.
+**Is there a cancellation fee?**
+On Pro there is no fee; on Enterprise, the contract terms apply.

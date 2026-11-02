@@ -1,5 +1,5 @@
 ---
-title: Plano Starter
+title: Starter Plan
 tenant: fcai
 product: fcai-cloud
 plan: starter
@@ -9,137 +9,137 @@ status: published
 visibility: internal
 ---
 
-# Plano Starter
+# Starter Plan
 
-O plano **Starter** do FCAI Cloud é a porta de entrada gratuita da plataforma, voltada
-para times pequenos, projetos individuais e provas de conceito. Este documento detalha
-para quem o plano é indicado, seus limites, recursos incluídos, segurança, suporte,
-condições comerciais, disponibilidade e as diferenças em relação aos planos Pro e
-Enterprise. Todos os números são fictícios.
+The FCAI Cloud **Starter** plan is the platform's free entry point, aimed at small
+teams, individual projects and proofs of concept. This document details who the plan
+is for, its limits, included features, security, support, commercial terms,
+availability and the differences compared to the Pro and Enterprise plans. All numbers
+are fictitious.
 
-## Para Quem é o Starter
+## Who Starter Is For
 
-O Starter atende organizações e pessoas que:
+Starter serves organizations and individuals who:
 
-- Estão avaliando o FCAI Cloud antes de contratar um plano pago.
-- Monitoram poucos serviços, geralmente um ambiente de desenvolvimento ou um projeto.
-- Toleram retenção curta de dados e não têm exigência regulatória de histórico.
-- Não precisam de SLA de suporte com prazo garantido.
-- Preferem uma configuração autônoma, sem contrato e sem cartão de crédito.
+- Are evaluating FCAI Cloud before purchasing a paid plan.
+- Monitor few services, usually a development environment or a single project.
+- Tolerate short data retention and have no regulatory history requirement.
+- Do not need a support SLA with a guaranteed deadline.
+- Prefer an autonomous setup, with no contract and no credit card.
 
-## Limites do Plano
+## Plan Limits
 
-- **Até 3 usuários** na organização.
-- **Retenção de dados de 7 dias** para métricas, logs e traces.
-- **Ingestão de até 5 GB de logs por mês**, sem cobrança de excedente.
-- **Um único time** dentro da organização, sem separação por times.
-- **Alertas básicos** por e-mail, sem detecção de anomalias.
-- **Dashboards padrão** da plataforma, com personalização limitada.
+- **Up to 3 users** in the organization.
+- **7-day data retention** for metrics, logs and traces.
+- **Up to 5 GB of log ingestion per month**, with no overage billing.
+- **A single team** within the organization, with no team separation.
+- **Basic alerts** by e-mail, with no anomaly detection.
+- **Default platform dashboards**, with limited customization.
 
-Ao atingir o limite de ingestão, a coleta de novos dados é pausada até o próximo ciclo.
-O Starter **não gera cobrança de consumo excedente**: em vez de faturar o excedente, a
-plataforma interrompe a ingestão, como forma de manter o plano gratuito.
+When the ingestion limit is reached, the collection of new data is paused until the
+next cycle. Starter **does not generate overage charges**: instead of billing the
+overage, the platform stops ingestion, as a way of keeping the plan free.
 
-## Recursos Incluídos
+## Included Features
 
-- Coleta de **métricas, logs e traces** pelos agentes padrão.
-- **Exploradores** de métricas e logs para consulta e filtragem.
-- **Integrações** com as fontes de dados suportadas pela plataforma.
-- **Central de status** e base de conhecimento pública.
-- **Notificações de uso** ao se aproximar do limite de ingestão do plano.
+- Collection of **metrics, logs and traces** by the default agents.
+- Metric and log **explorers** for querying and filtering.
+- **Integrations** with the data sources supported by the platform.
+- **Status page** and public knowledge base.
+- **Usage notifications** when approaching the plan's ingestion limit.
 
-## Segurança
+## Security
 
-- **Criptografia** de dados em trânsito e em repouso, igual aos demais planos.
-- **Autenticação por e-mail e senha**, com verificação em duas etapas opcional.
-- **Sem Single Sign-On (SSO)** e **sem provisionamento via SCIM**.
-- **Sem controle de acesso baseado em papéis (RBAC)** e **sem trilhas de auditoria**.
-- Sem restrição de acesso por rede ou lista de IPs permitidos.
+- **Encryption** of data in transit and at rest, the same as the other plans.
+- **E-mail and password authentication**, with optional two-step verification.
+- **No Single Sign-On (SSO)** and **no SCIM provisioning**.
+- **No role-based access control (RBAC)** and **no audit trails**.
+- No network access restriction or IP allowlist.
 
-Organizações com exigências de SSO, RBAC ou auditoria devem considerar o plano
-Enterprise, que concentra os recursos de segurança avançada.
+Organizations that require SSO, RBAC or auditing should consider the Enterprise plan,
+which concentrates the advanced security features.
 
-## Gestão de Usuários e Acessos
+## User and Access Management
 
-O Starter oferece uma gestão de usuários simplificada:
+Starter offers simplified user management:
 
-- Convite de até 3 usuários por e-mail.
-- Todos os usuários compartilham o mesmo nível de acesso à organização.
-- Não há papéis customizáveis nem permissões por recurso.
-- A remoção de usuários é feita manualmente pelo criador da organização.
+- Invite up to 3 users by e-mail.
+- All users share the same access level to the organization.
+- There are no customizable roles or per-resource permissions.
+- Users are removed manually by the organization's creator.
 
-## Onboarding e Adoção
+## Onboarding and Adoption
 
-O onboarding do Starter é **self-service**, sem participação do time comercial:
+Starter onboarding is **self-service**, with no involvement of the sales team:
 
-1. **Cadastro:** criação da organização diretamente no site, sem cartão de crédito.
-2. **Instalação do agente:** guia de início rápido na base de conhecimento.
-3. **Primeiro dashboard:** modelos prontos para os serviços mais comuns.
-4. **Comunidade:** dúvidas são tiradas no fórum público e na documentação.
+1. **Sign-up:** create the organization directly on the website, with no credit card.
+2. **Agent installation:** quick start guide in the knowledge base.
+3. **First dashboard:** ready-made templates for the most common services.
+4. **Community:** questions are answered in the public forum and the documentation.
 
-Não há kickoff assistido, treinamento dedicado nem gerente de conta neste plano.
+There is no assisted kickoff, dedicated training or account manager on this plan.
 
-## Suporte
+## Support
 
-- Atendimento pela **base de conhecimento** e pela **comunidade**.
-- **Sem SLA de resposta garantido** para P1, P2 ou P3 (ver documento de SLA de suporte).
-- **Sem e-mail de suporte** e **sem portal de chamados**, disponíveis a partir do Pro.
-- Sem canal dedicado, telefone de emergência ou gerente de conta.
+- Service through the **knowledge base** and the **community**.
+- **No guaranteed response SLA** for P1, P2 or P3 (see the support SLA document).
+- **No support e-mail** and **no ticket portal**, available starting with Pro.
+- No dedicated channel, emergency phone line or account manager.
 
-## Condições Comerciais
+## Commercial Terms
 
-- **Preço: R$ 0/mês.** O plano é gratuito por tempo indeterminado.
-- **Sem contrato** e **sem cartão de crédito** para uso do plano.
-- Sem emissão de fatura, já que não há cobrança.
-- O upgrade para o Pro pode ser feito a qualquer momento, de forma self-service.
-- Ao final do **trial de 14 dias** do plano Pro, a organização que não fizer upgrade
-  retorna automaticamente aos limites do Starter.
+- **Price: R$ 0/month.** The plan is free indefinitely.
+- **No contract** and **no credit card** required to use the plan.
+- No invoices are issued, since there is no charge.
+- Upgrading to Pro can be done at any time, self-service.
+- At the end of the Pro plan's **14-day trial**, an organization that does not upgrade
+  automatically returns to the Starter limits.
 
-### Retorno do Trial para o Starter
+### Returning from the Trial to Starter
 
-Quando a organização volta do trial do Pro para o Starter, os dados que excedem os
-limites do Starter — como retenção acima de 7 dias — podem ser arquivados ou removidos
-conforme a política de retenção descrita na política comercial.
+When the organization goes back from the Pro trial to Starter, data that exceeds the
+Starter limits — such as retention beyond 7 days — may be archived or removed according
+to the retention policy described in the commercial policy.
 
-## Disponibilidade
+## Availability
 
-O Starter **não possui meta formal de disponibilidade** nem política de créditos de SLA.
-A plataforma é operada com o mesmo padrão de infraestrutura dos demais planos, mas sem
-compromisso contratual de disponibilidade para este plano.
+Starter **has no formal availability target** and no SLA credit policy. The platform
+runs on the same infrastructure standard as the other plans, but with no contractual
+availability commitment for this plan.
 
-## Diferenças em Relação aos Planos Pro e Enterprise
+## Differences Compared to the Pro and Enterprise Plans
 
-| Aspecto | Starter | Pro | Enterprise |
+| Aspect | Starter | Pro | Enterprise |
 | --- | --- | --- | --- |
-| Usuários | 3 | até 20 | ilimitados |
-| Retenção de dados | 7 dias | 30 dias | até 15 meses |
-| Ingestão de logs | 5 GB/mês | 100 GB/mês | por contrato |
-| Consumo excedente | não (ingestão pausada) | cobrado por GB | conforme contrato |
-| Suporte | comunidade | SLA padrão | SLA reduzido, 24x7 |
-| SSO / RBAC / Auditoria | não | não | sim |
-| Faturamento | — | cartão | corporativo por contrato |
-| Meta de disponibilidade | — | 99,5% (informativa) | 99,9% |
+| Users | 3 | up to 20 | unlimited |
+| Data retention | 7 days | 30 days | up to 15 months |
+| Log ingestion | 5 GB/month | 100 GB/month | by contract |
+| Overage | no (ingestion paused) | billed per GB | per contract |
+| Support | community | standard SLA | shorter SLA, 24x7 |
+| SSO / RBAC / Audit | no | no | yes |
+| Billing | — | card | corporate, by contract |
+| Availability target | — | 99.5% (informational) | 99.9% |
 
-Em resumo, o Starter troca garantias por simplicidade: é gratuito e imediato, mas sem
-SLA, sem excedente faturável e com retenção curta. O Pro adiciona SLA em horário
-comercial e limites maiores; o Enterprise adiciona segurança avançada, suporte 24x7 e
-contrato corporativo.
+In short, Starter trades guarantees for simplicity: it is free and immediate, but has
+no SLA, no billable overage and short retention. Pro adds a business-hours SLA and
+higher limits; Enterprise adds advanced security, 24x7 support and a corporate
+contract.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**O Starter é gratuito para sempre?**
-Sim. O plano custa R$ 0/mês e não exige cartão de crédito nem contrato.
+**Is Starter free forever?**
+Yes. The plan costs R$ 0/month and requires neither a credit card nor a contract.
 
-**Quantos usuários o Starter permite?**
-Até 3 usuários na mesma organização.
+**How many users does Starter allow?**
+Up to 3 users in the same organization.
 
-**O Starter tem SLA de suporte?**
-Não. O atendimento ocorre pela comunidade e pela base de conhecimento, sem prazo
-garantido para P1, P2 ou P3.
+**Does Starter have a support SLA?**
+No. Service is provided by the community and the knowledge base, with no guaranteed
+deadline for P1, P2 or P3.
 
-**O que acontece se eu ultrapassar os 5 GB de ingestão?**
-A ingestão de novos dados é pausada até o próximo ciclo. Não há cobrança de excedente
-no Starter.
+**What happens if I exceed the 5 GB of ingestion?**
+Ingestion of new data is paused until the next cycle. There is no overage billing on
+Starter.
 
-**Por quanto tempo os dados ficam disponíveis?**
-Por 7 dias. Retenções maiores exigem o plano Pro ou Enterprise.
+**How long is data available?**
+For 7 days. Longer retention requires the Pro or Enterprise plan.

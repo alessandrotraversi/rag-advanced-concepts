@@ -51,11 +51,11 @@ PLANNER_SYSTEM_PROMPT = (
     "Rules, in order:\n"
     "1. needs_clarification FIRST: does the question have more than one reasonable "
     "reading, each leading to a different answer? Then it is true — ask instead of "
-    "guessing, writing clarification_question in Portuguese. Words that point to one "
-    "specific plan without naming it ('o plano da empresa', 'o meu plano') are exactly "
+    "guessing, writing clarification_question in English. Words that point to one "
+    "specific plan without naming it ('the company plan', 'my plan') are exactly "
     "this case. A question that mentions no plan at all is NOT this case: it has one "
     "reading, whose answer just varies per plan.\n"
-    "2. normalized_question: rewrite the question in Portuguese, self-contained and "
+    "2. normalized_question: rewrite the question in English, self-contained and "
     "specific, so it retrieves better.\n"
     "3. doc_types: EVERY document type that could hold the answer — the search only "
     "looks inside the types you list, so a missing type hides the answer. The price of "
@@ -64,15 +64,15 @@ PLANNER_SYSTEM_PROMPT = (
     "the list empty when unsure.\n"
     "4. plan: fill it only when the question is about ONE plan. A comparison between "
     "plans, or a question that names no plan, leaves it null.\n"
-    "5. exact_terms: literal terms worth matching, like P1, SSO, Enterprise, 99,9%. "
+    "5. exact_terms: literal terms worth matching, like P1, SSO, Enterprise, 99.9%. "
     "They are appended to the search text.\n\n"
     "Examples:\n"
-    "'E se der problema grave no Enterprise?' → one reading only (a P1 incident): "
+    "'What if something serious breaks on Enterprise?' → one reading only (a P1 incident): "
     "doc_types=['sla', 'plan'], plan='enterprise', needs_clarification=false.\n"
-    "'Como funciona o suporte no plano da empresa?' → 'plano da empresa' reads both as "
+    "'How does support work on the company plan?' → 'the company plan' reads both as "
     "the Enterprise plan and as whichever plan the company signed, and each reading "
     "answers differently: needs_clarification=true.\n"
-    "'O que acontece se eu ultrapassar a cota?' → no plan named, one reading, the "
+    "'What happens if I exceed the quota?' → no plan named, one reading, the "
     "answer covers every plan: doc_types=['product', 'policy', 'plan'], plan=null, "
     "needs_clarification=false."
 )
@@ -84,7 +84,7 @@ PLANNER_PROMPT = ChatPromptTemplate.from_messages(
 
 class QueryPlan(BaseModel):
     normalized_question: str = Field(
-        description="Question rewritten in Portuguese to retrieve better."
+        description="Question rewritten in English to retrieve better."
     )
     doc_types: list[DocType] = Field(
         default_factory=list,
@@ -100,7 +100,7 @@ class QueryPlan(BaseModel):
         description="True only if the question is ambiguous."
     )
     clarification_question: str | None = Field(
-        default=None, description="Clarification question in Portuguese, if needed."
+        default=None, description="Clarification question in English, if needed."
     )
 
 
@@ -147,7 +147,7 @@ def build_filters(query_plan: QueryPlan) -> dict:
 
 def build_search_query(query_plan: QueryPlan) -> str:
     # The exact terms ride along in the embedded text, so literals the rewrite may have
-    # dropped (P1, SCIM, 99,9%) still reach the search.
+    # dropped (P1, SCIM, 99.9%) still reach the search.
     return " ".join([query_plan.normalized_question, *query_plan.exact_terms])
 
 

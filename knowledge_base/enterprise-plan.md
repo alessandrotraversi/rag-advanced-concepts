@@ -1,5 +1,5 @@
 ---
-title: Plano Enterprise
+title: Enterprise Plan
 tenant: fcai
 product: fcai-cloud
 plan: enterprise
@@ -9,138 +9,136 @@ status: published
 visibility: internal
 ---
 
-# Plano Enterprise
+# Enterprise Plan
 
-O plano **Enterprise** do FCAI Cloud é voltado para empresas com times grandes, alto
-volume de dados e requisitos avançados de segurança, governança e suporte. Este
-documento detalha benefícios, segurança e conformidade, gestão de usuários e acessos,
-onboarding, suporte diferenciado, condições comerciais, SLA e as diferenças em relação
-aos planos Starter e Pro. Todos os números são fictícios.
+The FCAI Cloud **Enterprise** plan is aimed at companies with large teams, high data
+volume and advanced security, governance and support requirements. This document
+details the benefits, security and compliance, user and access management, onboarding,
+premium support, commercial terms, SLA and the differences compared to the Starter and
+Pro plans. All numbers are fictitious.
 
-## Para Quem é o Enterprise
+## Who Enterprise Is For
 
-O Enterprise atende organizações que:
+Enterprise serves organizations that:
 
-- Possuem muitos times e serviços monitorados simultaneamente.
-- Precisam de retenção longa de dados por exigência interna ou regulatória.
-- Exigem controles de segurança como SSO e RBAC.
-- Necessitam de suporte com SLA reduzido e cobertura 24x7.
-- Preferem faturamento corporativo em vez de cobrança por cartão.
-- Requerem governança centralizada e relatórios executivos.
+- Have many teams and services monitored at the same time.
+- Need long data retention due to internal or regulatory requirements.
+- Require security controls such as SSO and RBAC.
+- Need support with a shorter SLA and 24x7 coverage.
+- Prefer corporate invoicing instead of card billing.
+- Require centralized governance and executive reports.
 
-## Benefícios
+## Benefits
 
-- **Usuários ilimitados** e organização estruturada em múltiplos times.
-- **Retenção de dados configurável**, de até 15 meses.
-- **Volume de ingestão** de métricas e logs negociado por contrato.
-- **Ambiente com isolamento dedicado** disponível sob demanda.
-- **Detecção de anomalias** e alertas avançados incluídos.
-- **Relatórios executivos** de uso, disponibilidade e adoção.
-- **Cotas por time**, evitando que um time consuma toda a capacidade.
+- **Unlimited users** and an organization structured into multiple teams.
+- **Configurable data retention**, of up to 15 months.
+- **Ingestion volume** of metrics and logs negotiated by contract.
+- **Dedicated isolated environment** available on demand.
+- **Anomaly detection** and advanced alerts included.
+- **Executive reports** on usage, availability and adoption.
+- **Per-team quotas**, preventing one team from consuming all the capacity.
 
-## Segurança e Conformidade
+## Security and Compliance
 
-- **Criptografia** de dados em trânsito e em repouso.
-- **Single Sign-On (SSO)** via SAML, integrando com o provedor de identidade do cliente.
-- **Provisionamento automático** de usuários via SCIM.
-- **Controle de acesso baseado em papéis (RBAC)**, com papéis customizáveis.
-- **Trilhas de auditoria** das ações dos usuários na plataforma.
-- **Política de retenção e exclusão** de dados configurável conforme exigências
-  internas do cliente.
-- **Relatórios de conformidade** disponibilizados sob acordo de confidencialidade.
-- **Restrição de acesso por rede** (lista de IPs permitidos), quando aplicável.
+- **Encryption** of data in transit and at rest.
+- **Single Sign-On (SSO)** via SAML, integrating with the customer's identity provider.
+- **Automatic user provisioning** via SCIM.
+- **Role-based access control (RBAC)**, with customizable roles.
+- **Audit trails** of user actions on the platform.
+- **Data retention and deletion policy** configurable according to the customer's
+  internal requirements.
+- **Compliance reports** made available under a non-disclosure agreement.
+- **Network access restriction** (IP allowlist), when applicable.
 
-### Governança de Dados
+### Data Governance
 
-O Enterprise permite definir políticas de retenção e mascaramento de dados sensíveis em
-logs, além de controlar quais times têm acesso a quais fontes de dados. Essas políticas
-são configuradas pelo administrador da organização e auditadas via trilhas de acesso.
+Enterprise lets you define retention and masking policies for sensitive data in logs,
+and control which teams have access to which data sources. These policies are
+configured by the organization administrator and audited through access trails.
 
-## Gestão de Usuários e Acessos
+## User and Access Management
 
-O plano Enterprise oferece um painel de administração central que permite:
+The Enterprise plan offers a central administration panel that allows you to:
 
-- Criar e gerenciar múltiplos times dentro da mesma organização.
-- Atribuir papéis e permissões por time e por recurso.
-- Provisionar e desprovisionar usuários automaticamente via SCIM.
-- Definir políticas de acesso, como restrição por domínio de e-mail corporativo.
-- Consultar trilhas de auditoria para fins de segurança e governança.
+- Create and manage multiple teams within the same organization.
+- Assign roles and permissions per team and per resource.
+- Provision and deprovision users automatically via SCIM.
+- Define access policies, such as restriction by corporate e-mail domain.
+- Query audit trails for security and governance purposes.
 
-### Papéis Padrão (fictícios)
+### Default Roles (fictitious)
 
-- **Administrador:** gerencia a organização, times, cobrança e segurança.
-- **Editor:** cria e edita dashboards, alertas e integrações.
-- **Analista:** consulta dados e dashboards, sem alterar configurações.
-- **Somente leitura:** acesso de visualização para stakeholders.
+- **Administrator:** manages the organization, teams, billing and security.
+- **Editor:** creates and edits dashboards, alerts and integrations.
+- **Analyst:** queries data and dashboards, without changing settings.
+- **Read-only:** view access for stakeholders.
 
-## Onboarding e Adoção
+## Onboarding and Adoption
 
-Clientes Enterprise contam com um processo de onboarding assistido, fictício, que
-inclui:
+Enterprise customers get a fictitious assisted onboarding process that includes:
 
-1. **Kickoff:** alinhamento de objetivos, escopo de monitoramento e responsáveis.
-2. **Implantação:** configuração de agentes, integrações e primeiros dashboards.
-3. **Capacitação:** treinamento dos times na plataforma.
-4. **Acompanhamento:** revisões periódicas de adoção com o gerente de conta.
+1. **Kickoff:** alignment of goals, monitoring scope and owners.
+2. **Rollout:** configuration of agents, integrations and the first dashboards.
+3. **Training:** training the teams on the platform.
+4. **Follow-up:** periodic adoption reviews with the account manager.
 
-### Plano de Sucesso
+### Success Plan
 
-O gerente de conta define, junto ao cliente, um plano de sucesso com metas de adoção,
-marcos de implantação e indicadores de valor. Revisões trimestrais avaliam o progresso
-e ajustam o plano conforme a evolução do uso.
+The account manager defines, together with the customer, a success plan with adoption
+goals, rollout milestones and value indicators. Quarterly reviews assess progress and
+adjust the plan as usage evolves.
 
-## Suporte Diferenciado
+## Premium Support
 
-- Suporte **24x7** para chamados críticos.
-- **SLA reduzido:** P1 com resposta em até 1 hora (ver documento de SLA de suporte).
-- **Canal dedicado** de atendimento e telefone de emergência para P1.
-- **Gerente de conta** responsável pelo acompanhamento da conta e dos chamados P1 e P2.
-- **Relatório de causa raiz** (post-mortem) para incidentes críticos.
+- **24x7** support for critical tickets.
+- **Shorter SLA:** P1 with a response within 1 hour (see the support SLA document).
+- **Dedicated support channel** and an emergency phone line for P1.
+- **Account manager** responsible for following the account and P1 and P2 tickets.
+- **Root cause report** (post-mortem) for critical incidents.
 
-## Condições Comerciais
+## Commercial Terms
 
-- Contrato comercial com condições personalizadas.
-- **Faturamento corporativo**, com emissão de nota fiscal conforme o acordo.
-- Descontos por volume de usuários e de ingestão.
-- Prazos de pagamento e formas de cobrança negociados (ver política de faturamento).
-- Cláusulas de renovação e reajuste definidas em contrato.
-- Possibilidade de faturamento por centro de custo ou unidade de negócio.
+- Commercial contract with customized terms.
+- **Corporate invoicing**, with invoices issued according to the agreement.
+- Volume discounts on users and ingestion.
+- Negotiated payment terms and billing methods (see the billing policy).
+- Renewal and adjustment clauses defined in the contract.
+- Optional invoicing per cost center or business unit.
 
-## Disponibilidade e Créditos
+## Availability and Credits
 
-O Enterprise conta com meta de disponibilidade de **99,9%** ao mês e política de
-créditos de SLA quando a meta não é atingida, conforme detalhado no documento de SLA de
-suporte. Os créditos são aplicados como desconto na fatura seguinte.
+Enterprise has a monthly availability target of **99.9%** and an SLA credit policy when
+the target is not met, as detailed in the support SLA document. Credits are applied as
+a discount on the next invoice.
 
-## Diferenças em Relação aos Planos Starter e Pro
+## Differences Compared to the Starter and Pro Plans
 
-| Aspecto | Starter | Pro | Enterprise |
+| Aspect | Starter | Pro | Enterprise |
 | --- | --- | --- | --- |
-| Usuários | 3 | até 20 | ilimitados |
-| Retenção de dados | 7 dias | 30 dias | até 15 meses |
-| Ingestão de logs | 5 GB/mês | 100 GB/mês | por contrato |
-| Suporte | comunidade | SLA padrão | SLA reduzido, 24x7 |
-| SSO / RBAC / Auditoria | não | não | sim |
-| Faturamento | — | cartão | corporativo por contrato |
-| Gerente de conta | não | não | sim |
-| Crédito de SLA | não | não | sim |
+| Users | 3 | up to 20 | unlimited |
+| Data retention | 7 days | 30 days | up to 15 months |
+| Log ingestion | 5 GB/month | 100 GB/month | by contract |
+| Support | community | standard SLA | shorter SLA, 24x7 |
+| SSO / RBAC / Audit | no | no | yes |
+| Billing | — | card | corporate, by contract |
+| Account manager | no | no | yes |
+| SLA credit | no | no | yes |
 
-Em resumo, o Enterprise se diferencia por escala (usuários e retenção ilimitados ou
-amplamente configuráveis), segurança avançada (SSO, RBAC e auditoria), suporte com
-cobertura 24x7 e um modelo comercial baseado em contrato corporativo, em vez de
-cobrança recorrente por cartão.
+In short, Enterprise stands out for scale (unlimited or widely configurable users and
+retention), advanced security (SSO, RBAC and auditing), support with 24x7 coverage and
+a commercial model based on a corporate contract instead of recurring card billing.
 
-## Perguntas Frequentes
+## Frequently Asked Questions
 
-**O Enterprise tem limite de usuários?**
-Não. O plano oferece usuários ilimitados.
+**Does Enterprise have a user limit?**
+No. The plan offers unlimited users.
 
-**Como funciona o SSO?**
-Via SAML, integrando com o provedor de identidade do cliente, com provisionamento por
+**How does SSO work?**
+Via SAML, integrating with the customer's identity provider, with provisioning via
 SCIM.
 
-**Existe gerente de conta?**
-Sim. O Enterprise inclui um gerente de conta dedicado.
+**Is there an account manager?**
+Yes. Enterprise includes a dedicated account manager.
 
-**Qual a retenção máxima de dados?**
-Configurável em até 15 meses, conforme o contrato.
+**What is the maximum data retention?**
+Configurable up to 15 months, according to the contract.

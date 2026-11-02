@@ -40,17 +40,17 @@ from app.retrieve import connect_store, ensure_collection_ready
 
 PREVIEW_LIMIT = 300
 NO_ANSWER_MESSAGE = (
-    "Não encontrei informação suficiente na base de conhecimento "
-    "para responder com segurança."
+    "I could not find enough information in the knowledge base "
+    "to answer reliably."
 )
-FALLBACK_CLARIFICATION = "Pode detalhar melhor a sua pergunta?"
+FALLBACK_CLARIFICATION = "Could you give more details about your question?"
 
 SYSTEM_PROMPT = (
     "You are a support assistant for FCAI. "
     "Answer the user's question using ONLY the context below. "
     "Do not use prior knowledge and do not invent information or sources.\n\n"
     "Rules:\n"
-    "- Write 'answer' in Portuguese, objective and clear.\n"
+    "- Write 'answer' in English, objective and clear.\n"
     "- Set 'has_answer' to true only if the context supports the answer.\n"
     "- 'used_chunk_ids' must contain only Chunk IDs present in the context.\n"
     f"- If the context is not enough, set 'has_answer' to false, set 'answer' to "
@@ -91,7 +91,7 @@ def _timed(timings: "PipelineTimings", field: str):
 
 
 class RagAnswer(BaseModel):
-    answer: str = Field(description="Answer in Portuguese, based only on the context.")
+    answer: str = Field(description="Answer in English, based only on the context.")
     has_answer: bool = Field(description="True only if the context supports the answer.")
     used_chunk_ids: list[str] = Field(
         description="Chunk IDs from the context that support the answer."

@@ -15,7 +15,7 @@ INSTRUCTION = (
     "Do not use prior knowledge and do not invent information. "
     "If the document does not contain enough information to answer, say clearly "
     "that the document does not have enough information. "
-    "Always answer in Portuguese."
+    "Always answer in English."
 )
 
 
