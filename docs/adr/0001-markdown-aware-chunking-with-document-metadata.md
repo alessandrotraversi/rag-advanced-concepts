@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-09
-- **Code:** `app/ingest.py` (`REQUIRED_METADATA`, `load_document`, `chunk_document`)
+- **Code:** `app/ingest.py` (`load_document`, `chunk_document`), `app/metadata.py` (`METADATA_SCHEMA`)
 
 ## Context
 
