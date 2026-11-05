@@ -9,32 +9,11 @@ from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
 )
 
-from app.manifest import document_hash
+from app.metadata import SCHEMA, FieldContext, MetadataError, Scope
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_BASE_DIR = PROJECT_ROOT / "knowledge_base"
 OUTPUT_PATH = PROJECT_ROOT / "data" / "chunks.jsonl"
-
-REQUIRED_METADATA = [
-    "title",
-    "tenant",
-    "product",
-    "plan",
-    "doc_type",
-    "version",
-    "status",
-    "visibility",
-]
-
-# Metadata that gets prepended to the chunk text, so it reaches the embedding.
-CONTEXT_HEADER_FIELDS = [
-    ("Document title", "title"),
-    ("Document type", "doc_type"),
-    ("Product", "product"),
-    ("Plan", "plan"),
-    ("Version", "version"),
-    ("Section", "section"),
-]
 
 HEADERS_TO_SPLIT_ON = [
     ("#", "h1"),
@@ -59,18 +38,17 @@ def load_document(path: Path) -> frontmatter.Post:
     if not post.metadata:
         raise IngestionError(f"{path.name}: missing YAML front matter")
 
-    missing = [key for key in REQUIRED_METADATA if key not in post.metadata]
-    if missing:
-        raise IngestionError(
-            f"{path.name}: missing required metadata: {', '.join(missing)}"
-        )
+    # Required fields and allowed values are declared in app/metadata.py.
+    try:
+        SCHEMA.validate_front_matter(path.name, post.metadata)
+    except MetadataError as exc:
+        raise IngestionError(str(exc)) from exc
 
     if not post.content.strip():
         raise IngestionError(f"{path.name}: document body is empty")
 
-    # Hash of the complete file (front matter included), so any edit marks
-    # the document as changed for the incremental indexer.
-    post.metadata["document_hash"] = document_hash(raw)
+    # Document-level derived fields (e.g. document_hash).
+    SCHEMA.resolve(Scope.DOCUMENT, FieldContext(path, post.metadata, raw=raw))
     return post
 
 
@@ -87,21 +65,6 @@ def load_documents() -> list[tuple[Path, frontmatter.Post]]:
         )
 
     return [(path, load_document(path)) for path in paths]
-
-
-def section_of(header_metadata: dict) -> str | None:
-    for key in ("h3", "h2", "h1"):
-        if header_metadata.get(key):
-            return header_metadata[key]
-    return None
-
-
-def build_context_header(metadata: dict) -> str:
-    return "\n".join(
-        f"{label}: {metadata[key]}"
-        for label, key in CONTEXT_HEADER_FIELDS
-        if metadata.get(key)
-    )
 
 
 def chunk_document(
@@ -122,25 +85,21 @@ def chunk_document(
 
     chunks = []
     for index, piece in enumerate(pieces):
-        # Start from the document's front matter metadata and enrich each chunk
-        # with its own identity (id/index), origin (source_file/section) and size.
-        metadata = dict(post.metadata)
-        # Deterministic id: same file + same content + same position = same id,
-        # so reindexing never duplicates and a changed document gets new ids.
-        metadata["chunk_id"] = (
-            f"{path.stem}-{metadata['document_hash'][:12]}-{index:04d}"
-        )
-        metadata["source_file"] = path.name
-        metadata["chunk_index"] = index
-        metadata["section"] = section_of(piece.metadata)
+        # Start from the document's metadata and enrich each chunk with the fields
+        # declared in app/metadata.py (identity, origin, section, ...).
+        ctx = FieldContext(path, dict(post.metadata), index=index, headers=piece.metadata)
+        metadata = SCHEMA.resolve(Scope.CHUNK, ctx)
 
         # Metadata alone never reaches the embedding, so the header is prepended to
         # the text itself: a chunk from the middle of a document stays self-explanatory.
         content = piece.page_content
         if context_header:
-            content = f"{build_context_header(metadata)}\n\n{content}"
+            content = f"{SCHEMA.context_header(metadata)}\n\n{content}"
 
-        metadata["content_length"] = len(content)
+        # Fields that depend on the final text (e.g. content_length).
+        SCHEMA.resolve(Scope.CONTENT, FieldContext(
+            path, metadata, index=index, headers=piece.metadata, content=content
+        ))
         chunks.append({"content": content, "metadata": metadata})
 
     return chunks
