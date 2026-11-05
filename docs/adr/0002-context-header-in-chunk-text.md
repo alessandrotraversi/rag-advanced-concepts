@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-13
-- **Code:** `app/ingest.py` (`CONTEXT_HEADER_FIELDS`, `build_context_header`), `--no-context-header`
+- **Code:** `app/metadata.py` (`header_label`, `CONTEXT_HEADER_ORDER`, `MetadataSchema.context_header`), `--no-context-header`
 
 ## Context
 
