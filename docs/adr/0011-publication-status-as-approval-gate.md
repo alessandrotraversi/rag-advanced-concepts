@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-14
-- **Code:** `app/ingest.py` (`REQUIRED_METADATA`), `app/query_planner.py` (`SAFE_FILTERS`, `build_filters`), `app/index.py` (`manifest_entry`), `app/retrieve.py` (`--status`)
+- **Code:** `app/metadata.py` (`METADATA_SCHEMA`, `STATUSES`), `app/query_planner.py` (`SAFE_FILTERS`, `build_filters`), `app/index.py` (`manifest_entry`), `app/retrieve.py` (`--status`)
 
 ## Context
 
@@ -30,8 +30,8 @@ injection, and must be auditable.
 - No unapproved content can reach an answer, regardless of the question.
 - Approval, its reviewer and its timestamp are in Git history, not in the index.
 - Drafts can be indexed and tested before publication without a second index.
-- `status` values are not validated: a typo makes a document silently unanswerable.
-  Validating allowed values at ingestion is the next step.
+- `status` values are validated at ingestion (`choices=STATUSES`): a typo such as
+  `publised` stops ingestion instead of making a document silently unanswerable.
 - `visibility` is not yet enforced as a filter; it is reserved for caller-based access
   control once callers are authenticated.
 - Drafts count for the planner↔index contract check (ADR 0008).
