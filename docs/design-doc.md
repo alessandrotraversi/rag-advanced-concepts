@@ -100,8 +100,8 @@ visibility: internal
 ```
 
 `ingest.load_document()` rejects the file with a clear `IngestionError` if the file is
-empty, has no front matter, misses any key of `REQUIRED_METADATA`, or has an empty
-body. A broken document stops ingestion instead of producing unfilterable chunks.
+empty, has no front matter, misses a required field or uses a value outside its allowed `choices` (both declared
+in `app/metadata.py`), or has an empty body. A broken document stops ingestion instead of producing unfilterable chunks.
 
 **2. Chunking follows the document structure, then the size limit.**
 
@@ -110,9 +110,12 @@ body. A broken document stops ingestion instead of producing unfilterable chunks
 2. `RecursiveCharacterTextSplitter(chunk_size=900, chunk_overlap=150)` cuts sections
    that are still too long into overlapping pieces.
 
-`section_of()` keeps the most specific heading (`h3` → `h2` → `h1`) as `section`.
+The `section` field (`_section()` in `app/metadata.py`) keeps the most specific heading (`h3` → `h2` → `h1`) as `section`.
 
-**3. Every chunk inherits all document metadata and adds its own:**
+**3. Every chunk inherits all document metadata and adds its own.** All fields are
+declared once in `METADATA_SCHEMA` (`app/metadata.py`) with their scope (`front_matter`,
+`document`, `chunk`, `content`), whether they are required, their allowed values, and
+their context-header label; adding a field is one line there:
 
 | Field | Origin | Used for |
 | --- | --- | --- |
@@ -126,7 +129,7 @@ body. A broken document stops ingestion instead of producing unfilterable chunks
 
 **4. Metadata that matters for meaning is also written into the text.** Metadata is
 stored in `langchain_metadata` (JSONB) and is used by filters, but it is **not**
-embedded. So `build_context_header()` prepends a header to each chunk:
+embedded. So `SCHEMA.context_header()` prepends a header to each chunk:
 
 ```
 Document title: Enterprise Plan
@@ -534,8 +537,8 @@ stateDiagram-v2
     archived --> [*]: file removed → chunks deleted on next index
 ```
 
-1. **State is mandatory metadata.** `status` (and `visibility`) are in
-   `REQUIRED_METADATA`; ingestion fails if they are missing, so no document enters the
+1. **State is mandatory metadata.** `status` (and `visibility`) are required
+   in `METADATA_SCHEMA`; ingestion fails if they are missing, so no document enters the
    index with an unknown state.
 2. **Approval is an edit to the document.** Changing `status: draft` →
    `status: published` changes the file, therefore its `document_hash`, therefore its
@@ -557,8 +560,9 @@ request changing the document and its `status`), and every bundled document is
 
 ### Known limits
 
-- `status` values are not validated (a typo such as `publised` is accepted at ingestion
-  and simply never retrieved).
+- `status` is validated against `draft`/`published`/`archived` at ingestion, but
+  `doc_type` and `plan` have no `choices` yet: their contract is still checked against
+  the planner at query time (ADR 0008).
 - `visibility` is required and indexed but not yet used as a filter; it is the natural
   place for role-based access (`internal` vs `public`) once callers are authenticated.
 - `ensure_planner_covers_index()` checks the whole table, drafts included — a draft
