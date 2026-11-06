@@ -9,6 +9,7 @@ To add a field:
 - derived field       -> ``MetadataField("word_count", scope=Scope.CONTENT,
                               compute=lambda ctx: len(ctx.content.split()))``
 - embed it in text    -> add ``header_label="Owner"``
+- constrain format    -> add ``pattern=r"[a-z-]+"`` (regex for the whole value)
 
 Fields are resolved in declaration order within each scope, so a computed field can
 read any field resolved before it from ``ctx.metadata``.
@@ -16,13 +17,14 @@ read any field resolved before it from ``ctx.metadata``.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from app.manifest import document_hash
+from app.versioning import EDITORIAL_VERSION_PATTERN, DocumentVersion
 
 
 class MetadataError(Exception):
@@ -31,9 +33,10 @@ class MetadataError(Exception):
 
 class Scope(str, Enum):
     FRONT_MATTER = "front_matter"  # read from the document's YAML front matter
-    DOCUMENT = "document"  # computed once per document (e.g. hash of the file)
+    DOCUMENT = "document"  # computed once per document, from the raw file
     CHUNK = "chunk"  # computed per chunk, before the context header is built
     CONTENT = "content"  # computed per chunk, from the final text (header included)
+    VERSION = "version"  # computed per chunk, once every chunk of the document is final
 
 
 @dataclass(frozen=True)
@@ -44,6 +47,7 @@ class FieldContext:
     index: int | None = None  # chunk position inside the document
     headers: dict[str, str] = field(default_factory=dict)  # h1/h2/h3 of the chunk
     content: str | None = None  # final chunk text (CONTENT scope only)
+    version: DocumentVersion | None = None  # document version (VERSION scope only)
 
 
 Compute = Callable[[FieldContext], Any]
@@ -55,6 +59,7 @@ class MetadataField:
     scope: Scope = Scope.FRONT_MATTER
     required: bool = False
     choices: tuple[str, ...] | None = None
+    pattern: str | None = None  # regex the whole value must match
     header_label: str | None = None
     compute: Compute | None = None
 
@@ -68,16 +73,14 @@ class MetadataField:
 # --- Computed fields -------------------------------------------------------------
 
 
-def _document_hash(ctx: FieldContext) -> str:
-    # Hash of the complete file (front matter included), so any edit marks the
-    # document as changed for the incremental indexer.
-    return document_hash(ctx.raw)
+def _version_field(name: str) -> Compute:
+    # Version hashes are computed once per document in app/versioning.py (ADR 0012)
+    # and stamped on every chunk, so the indexer can diff without re-reading files.
+    return lambda ctx: getattr(ctx.version, name)
 
 
 def _chunk_id(ctx: FieldContext) -> str:
-    # Deterministic id: same file + same content + same position = same id, so
-    # reindexing never duplicates and a changed document gets new ids.
-    return f"{ctx.path.stem}-{ctx.metadata['document_hash'][:12]}-{ctx.index:04d}"
+    return ctx.version.chunk_id(ctx.index)
 
 
 def _section(ctx: FieldContext) -> str | None:
@@ -97,17 +100,28 @@ METADATA_SCHEMA: tuple[MetadataField, ...] = (
     MetadataField("product", required=True, header_label="Product"),
     MetadataField("plan", required=True, header_label="Plan"),
     MetadataField("doc_type", required=True, header_label="Document type"),
-    MetadataField("version", required=True, header_label="Version"),
+    MetadataField(
+        "version",
+        required=True,
+        pattern=EDITORIAL_VERSION_PATTERN,
+        header_label="Version",
+    ),
     MetadataField("status", required=True, choices=STATUSES),
     MetadataField("visibility", required=True),
-    MetadataField("document_hash", Scope.DOCUMENT, compute=_document_hash),
-    MetadataField("chunk_id", Scope.CHUNK, compute=_chunk_id),
     MetadataField("source_file", Scope.CHUNK, compute=lambda ctx: ctx.path.name),
     MetadataField("chunk_index", Scope.CHUNK, compute=lambda ctx: ctx.index),
     MetadataField("section", Scope.CHUNK, header_label="Section", compute=_section),
     MetadataField(
         "content_length", Scope.CONTENT, compute=lambda ctx: len(ctx.content)
     ),
+    MetadataField("body_hash", Scope.VERSION, compute=_version_field("body_hash")),
+    MetadataField(
+        "embedding_hash", Scope.VERSION, compute=_version_field("embedding_hash")
+    ),
+    MetadataField(
+        "metadata_hash", Scope.VERSION, compute=_version_field("metadata_hash")
+    ),
+    MetadataField("chunk_id", Scope.VERSION, compute=_chunk_id),
 )
 
 # Order of the lines in the context header (by field name). Kept separate from the
@@ -148,6 +162,14 @@ class MetadataSchema:
         return tuple(f for f in self.fields if f.scope is scope)
 
     @property
+    def computed(self) -> tuple[str, ...]:
+        return tuple(f.name for f in self.fields if f.scope is not Scope.FRONT_MATTER)
+
+    def front_matter(self, metadata: dict[str, Any]) -> dict[str, Any]:
+        """The author-written part of ``metadata`` (everything not computed)."""
+        return {k: v for k, v in metadata.items() if k not in self.computed}
+
+    @property
     def required(self) -> tuple[str, ...]:
         return tuple(f.name for f in self.in_scope(Scope.FRONT_MATTER) if f.required)
 
@@ -162,6 +184,8 @@ class MetadataSchema:
                 errors.append(
                     f"invalid {f.name}: {value!r} (allowed: {', '.join(f.choices)})"
                 )
+            if f.pattern and value is not None and not re.fullmatch(f.pattern, str(value)):
+                errors.append(f"invalid {f.name}: {value!r} (must match {f.pattern})")
         if errors:
             raise MetadataError(f"{source}: {'; '.join(errors)}")
 
