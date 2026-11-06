@@ -6,15 +6,23 @@ from pathlib import Path
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_postgres import PGEngine, PGVectorStore
+from psycopg.types.json import Json
 
 from app.config import settings
 from app.db import enable_vector_extension, get_connection
 from app.ingest import OUTPUT_PATH as CHUNKS_PATH
-from app.manifest import MANIFEST_PATH, load_manifest, save_manifest
+from app.versioning import (
+    HASH_FIELDS,
+    MANIFEST_PATH,
+    DocumentVersion,
+    VersionRegistry,
+    index_fingerprint,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 TABLE_NAME = "fcai_knowledge_base"
 ID_COLUMN = {"name": "chunk_id", "data_type": "TEXT", "nullable": False}
+METADATA_COLUMN = "langchain_metadata"  # PGVectorStore's default JSON column
 
 
 class IndexingError(Exception):
@@ -40,7 +48,7 @@ def load_chunks() -> list[Document]:
             metadata = record.get("metadata") or {}
             if not content:
                 raise IndexingError(f"line {number}: missing content")
-            for field in ("chunk_id", "source_file", "document_hash"):
+            for field in ("chunk_id", "source_file", *HASH_FIELDS):
                 if not metadata.get(field):
                     raise IndexingError(f"line {number}: missing metadata.{field}")
 
@@ -57,29 +65,6 @@ def group_by_source(documents: list[Document]) -> dict[str, list[Document]]:
     for document in documents:
         grouped.setdefault(document.metadata["source_file"], []).append(document)
     return grouped
-
-
-def classify_sources(
-    grouped: dict[str, list[Document]], indexed_sources: dict
-) -> dict[str, list[str]]:
-    changes: dict[str, list[str]] = {
-        "new": [],
-        "changed": [],
-        "unchanged": [],
-        "removed": [],
-    }
-    for source, documents in grouped.items():
-        previous = indexed_sources.get(source)
-        if previous is None:
-            changes["new"].append(source)
-        elif previous["document_hash"] != documents[0].metadata["document_hash"]:
-            changes["changed"].append(source)
-        else:
-            changes["unchanged"].append(source)
-    changes["removed"] = [
-        source for source in indexed_sources if source not in grouped
-    ]
-    return changes
 
 
 def table_exists() -> bool:
@@ -110,17 +95,20 @@ def connect_store(embeddings: OpenAIEmbeddings, create_table: bool) -> PGVectorS
     )
 
 
-def manifest_entry(documents: list[Document]) -> dict:
-    metadata = documents[0].metadata
-    return {
-        "document_hash": metadata["document_hash"],
-        "title": metadata.get("title"),
-        "tenant": metadata.get("tenant"),
-        "product": metadata.get("product"),
-        "version": metadata.get("version"),
-        "status": metadata.get("status"),
-        "chunk_ids": [document.metadata["chunk_id"] for document in documents],
-    }
+def update_metadata(documents: list[Document]) -> None:
+    # Same embedded text means same chunk ids and same vectors: only the JSON
+    # metadata column changes (e.g. status draft -> published), no embedding calls.
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.executemany(
+                f'UPDATE "{TABLE_NAME}" SET "{METADATA_COLUMN}" = %s '
+                f'WHERE "{ID_COLUMN["name"]}" = %s',
+                [
+                    (Json(document.metadata), document.metadata["chunk_id"])
+                    for document in documents
+                ],
+            )
+        conn.commit()
 
 
 def parse_args() -> argparse.Namespace:
@@ -152,37 +140,44 @@ def main() -> None:
     print("Connecting to Postgres...")
     enable_vector_extension()
 
-    indexed_sources = load_manifest().get("sources", {})
+    fingerprint = index_fingerprint(settings.openai_embedding_model, TABLE_NAME)
+    registry = VersionRegistry.load()
+    current = {
+        source: DocumentVersion.from_metadata(docs[0].metadata)
+        for source, docs in grouped.items()
+    }
 
-    # Without a manifest (or without the table) the index state is unknown,
-    # so rebuild the table from scratch instead of diffing against stale rows.
-    rebuild = not indexed_sources or not table_exists()
+    # Without a compatible manifest (none, older format, other embedding model) or
+    # without the table, the stored vectors cannot be trusted: rebuild from scratch.
+    reason = registry.rebuild_reason(fingerprint)
+    if reason is None and not table_exists():
+        reason = "table missing"
+    rebuild = reason is not None
     if rebuild:
-        indexed_sources = {}
+        print(f"Rebuilding the index: {reason}")
+        registry = VersionRegistry()
 
-    changes = classify_sources(grouped, indexed_sources)
-    print(f"New sources: {len(changes['new'])}")
-    print(f"Changed sources: {len(changes['changed'])}")
-    print(f"Removed sources: {len(changes['removed'])}")
-    print(f"Unchanged sources: {len(changes['unchanged'])}")
+    changes = registry.diff(current)
+    print(f"New sources: {len(changes.new)}")
+    print(f"Changed sources: {len(changes.changed)}")
+    print(f"Metadata-only sources: {len(changes.metadata_only)}")
+    print(f"Removed sources: {len(changes.removed)}")
+    print(f"Unchanged sources: {len(changes.unchanged)}")
 
     if args.force:
-        delete_ids = [
-            chunk_id
-            for entry in indexed_sources.values()
-            for chunk_id in entry["chunk_ids"]
-        ]
+        delete_ids = registry.chunk_ids(registry.sources)
         sources_to_index = list(grouped)
+        sources_to_update = []
     else:
-        delete_ids = [
-            chunk_id
-            for source in changes["removed"] + changes["changed"]
-            for chunk_id in indexed_sources[source]["chunk_ids"]
-        ]
-        sources_to_index = changes["new"] + changes["changed"]
+        delete_ids = registry.chunk_ids(changes.removed + changes.changed)
+        sources_to_index = changes.new + changes.changed
+        sources_to_update = changes.metadata_only
 
     documents_to_index = [
         document for source in sources_to_index for document in grouped[source]
+    ]
+    documents_to_update = [
+        document for source in sources_to_update for document in grouped[source]
     ]
 
     embeddings = OpenAIEmbeddings(
@@ -198,13 +193,22 @@ def main() -> None:
             documents_to_index,
             ids=[document.metadata["chunk_id"] for document in documents_to_index],
         )
+    if documents_to_update:
+        update_metadata(documents_to_update)
 
-    save_manifest(
-        {source: manifest_entry(docs) for source, docs in grouped.items()}
+    VersionRegistry.write(
+        fingerprint,
+        {
+            source: current[source].manifest_entry(
+                docs[0].metadata, [document.metadata["chunk_id"] for document in docs]
+            )
+            for source, docs in grouped.items()
+        },
     )
 
     print(f"Deleted chunks: {len(delete_ids)}")
     print(f"Indexed chunks: {len(documents_to_index)}")
+    print(f"Metadata-updated chunks: {len(documents_to_update)}")
     print(f"Manifest saved to {MANIFEST_PATH.relative_to(PROJECT_ROOT)}")
     print("Indexing completed.")
 
