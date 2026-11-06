@@ -101,7 +101,7 @@ with a clear error when something is missing. Chunking preserves the Markdown st
 (`MarkdownHeaderTextSplitter` by sections, then `RecursiveCharacterTextSplitter` with
 `chunk_size=900` and `chunk_overlap=150`), and every chunk carries the document
 metadata plus its own (`chunk_id`, `source_file`, `chunk_index`, `section`,
-`content_length`, `document_hash`).
+`content_length`, `body_hash`, `embedding_hash`, `metadata_hash`).
 
 Every chunk is prefixed with a **context header** (title, type, product, plan, version
 and section) before it is indexed. Metadata does not reach the embedding — only the
@@ -119,11 +119,15 @@ and without it.
 The pgvector index stays consistent when documents change, without ever reindexing
 everything:
 
-- `python -m app.ingest` generates `data/chunks.jsonl` with a `document_hash` (SHA256
-  of the complete file, front matter included) in every chunk. The `chunk_id` is
-  **deterministic** — `file` + hash prefix + position, e.g.
+- `python -m app.ingest` generates `data/chunks.jsonl` with three hashes in every chunk
+  (`app/versioning.py`, ADR 0012): `embedding_hash` (the texts that get embedded),
+  `metadata_hash` (the front matter) and `body_hash` (the body as written). The
+  `chunk_id` is **deterministic** — `file` + `embedding_hash` prefix + position, e.g.
   `product-support-sla-8f3a91c2b4d0-0001` — so the same content always produces the
   same ids, and an edited document produces new ids.
+- `version` must look like `YYYY-MM`. If a document's body changed since the last index
+  but its `version` did not, `ingest` prints a warning; `--strict-versions` makes it
+  fail instead.
 - `python -m app.index` compares the current chunks with the manifest of the last
   indexing run (`data/index_manifest.json`) and classifies each document:
 
@@ -131,6 +135,7 @@ everything:
   |---|---|
   | `new` | indexes the document's chunks |
   | `changed` | deletes the old chunks (ids from the manifest) and indexes the new ones |
+  | `metadata_only` | only the front matter changed (e.g. `status`): updates the stored metadata, no embeddings |
   | `removed` | deletes the old chunks from the index |
   | `unchanged` | does nothing (no embedding calls) |
 
@@ -140,8 +145,9 @@ everything:
   document (and running `ingest` + `index`) cleans its orphan chunks from the index.
 - `python -m app.index --force` deletes every chunk registered in the manifest and
   reindexes all current chunks, rebuilding the index from scratch.
-- Without a manifest (first indexing run) the table is recreated from scratch, since
-  there is no way to know what it contains.
+- Without a compatible manifest (first run, older manifest format, or a different
+  embedding model — the manifest stores an index fingerprint) the table is recreated
+  from scratch, since its vectors cannot be trusted.
 - The chat **never** reindexes documents at runtime: indexing only happens through
   `app.ingest` + `app.index`.
 
@@ -405,9 +411,9 @@ app/
   main.py          # environment validation script
   chat.py          # chat without RAG (baseline)
   context_chat.py  # chat with an entire document in the prompt (no RAG)
-  ingest.py        # reads, validates and chunks the knowledge_base (with document_hash)
-  index.py         # indexes into pgvector only what changed (new/changed/removed)
-  manifest.py      # document hashing and reading/writing of index_manifest.json
+  ingest.py        # reads, validates and chunks the knowledge_base (with version hashes)
+  index.py         # indexes into pgvector only what changed (new/changed/metadata-only/removed)
+  versioning.py    # document versions (hashes, chunk ids), index fingerprint, manifest
   retrieve.py      # isolated search in pgvector, with filters (no RAG answer)
   query_planner.py # plans the search: understands the question, builds the filters and searches
   rerank.py        # selects which retrieved chunks go into the final prompt
