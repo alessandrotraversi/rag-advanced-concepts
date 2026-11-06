@@ -57,8 +57,8 @@ flowchart LR
 | Module | Responsibility |
 | --- | --- |
 | `app/ingest.py` | Validate front matter, split Markdown, add context header, hash, write `chunks.jsonl` |
-| `app/manifest.py` | `document_hash()` and manifest read/write |
-| `app/index.py` | Classify documents as new/changed/removed/unchanged and apply the diff to pgvector |
+| `app/versioning.py` | `DocumentVersion` (hashes, chunk id), `VersionRegistry` (manifest, diff, rebuild decision), index fingerprint |
+| `app/index.py` | Apply the registry's diff (new/changed/metadata-only/removed) to pgvector |
 | `app/query_planner.py` | `QueryPlan`, safe filters, filter building, search text, planner↔index contract |
 | `app/rerank.py` | `RerankResult`, candidate formatting, id validation |
 | `app/rag_pipeline.py` | Orchestration, structured answer, sources, refusal, debug, timings, logs |
@@ -114,14 +114,14 @@ The `section` field (`_section()` in `app/metadata.py`) keeps the most specific 
 
 **3. Every chunk inherits all document metadata and adds its own.** All fields are
 declared once in `METADATA_SCHEMA` (`app/metadata.py`) with their scope (`front_matter`,
-`document`, `chunk`, `content`), whether they are required, their allowed values, and
+`document`, `chunk`, `content`, `version`), whether they are required, their allowed values, and
 their context-header label; adding a field is one line there:
 
 | Field | Origin | Used for |
 | --- | --- | --- |
 | `title`, `tenant`, `product`, `plan`, `doc_type`, `version`, `status`, `visibility` | front matter | filters, sources, context header |
-| `document_hash` | SHA-256 of the raw file | versioning / change detection |
-| `chunk_id` | `{stem}-{hash[:12]}-{index:04d}` | primary key, citations |
+| `body_hash`, `embedding_hash`, `metadata_hash` | `DocumentVersion` (section 4) | versioning / change detection |
+| `chunk_id` | `{stem}-{embedding_hash[:12]}-{index:04d}` | primary key, citations |
 | `source_file` | file name | sources, grouping for the manifest |
 | `chunk_index` | position in the document | ordering, id |
 | `section` | closest heading | sources, context header |
@@ -166,43 +166,52 @@ predicates that run together with the vector search.
 
 ## 4. Chunks with versioning
 
-> ADR: [0003](adr/0003-content-addressed-chunk-ids.md)
+> ADRs: [0003](adr/0003-content-addressed-chunk-ids.md) (superseded),
+> [0012](adr/0012-version-registry-with-split-hashes-and-index-fingerprint.md)
 
 ### Problem
 
 Documents change. The system must know **which version** of a document an answer came
-from, must never mix old and new chunks of the same document, and must not duplicate
-rows when the same content is indexed twice.
+from, must never mix old and new chunks of the same document, must not duplicate rows
+when the same content is indexed twice — and should not pay for embeddings when only
+metadata changed.
 
 ### Structure
 
-Versioning has two layers with different owners:
+All versioning lives in `app/versioning.py`. A document has one editorial version and
+three hashes, each with one job; they are computed once per document
+(`DocumentVersion.build`) and stamped on every chunk through `Scope.VERSION`:
 
-| Layer | Field | Owner | Purpose |
+| Signal | Covers | Owner | A change means |
 | --- | --- | --- | --- |
-| Editorial version | `version` (e.g. `2026-01`) | document author, front matter | human-readable version, shown in the context header, in the rerank candidates and in every `Source` |
-| Content version | `document_hash` (SHA-256 of the full file) | `manifest.document_hash()` | machine version: detects *any* change, including front-matter-only changes |
+| `version` (e.g. `2026-01`) | human label, must match `YYYY-MM` | author, front matter | shown in the context header, rerank candidates and every `Source` |
+| `body_hash` | the Markdown body as written | `DocumentVersion` | the author must bump `version` (`ingest` warns; `--strict-versions` fails) |
+| `embedding_hash` | the final chunk texts, header included | `DocumentVersion` | new chunk ids → delete + re-embed |
+| `metadata_hash` | the front matter | `DocumentVersion` | update the stored metadata in place, no embeddings |
 
-The content version is **baked into the identity of every chunk**:
+The embedded content is **baked into the identity of every chunk**:
 
 ```
-chunk_id = f"{path.stem}-{document_hash[:12]}-{index:04d}"
+chunk_id = f"{path.stem}-{embedding_hash[:12]}-{index:04d}"
 #          product-support-sla-8f3a91c2b4d0-0001
 ```
 
 Consequences of this id scheme:
 
-- **Deterministic** — same file, same bytes, same position → same id. Re-indexing the
+- **Deterministic** — same embedded texts, same position → same id. Re-indexing the
   same content is an upsert of identical ids, never a duplicate.
-- **Content-addressed** — editing a single character changes the hash and therefore
-  every chunk id of that document. Old and new chunks can never collide, so a
-  "changed" document is handled as *delete old ids + insert new ids*
-  (section 9).
+- **Content-addressed** — any change to what is embedded (body, a header field such as
+  `version`, chunking parameters) changes every chunk id of that document. Old and new
+  chunks can never collide, so a "changed" document is handled as *delete old ids +
+  insert new ids* (section 9).
+- **Stable across metadata edits** — `status`, `visibility` or `tenant` do not reach the
+  embedding, so changing them keeps the ids and only rewrites the stored metadata.
 - **Traceable** — from a `chunk_id` in a log or a source you can tell the document and
-  the exact content version it came from.
+  the exact embedded version it came from.
 
-The manifest stores, per `source_file`, the `document_hash`, `version`, `status` and
-the list of `chunk_ids` that are live in the index — this is the version registry.
+`VersionRegistry` (the manifest) stores, per `source_file`, the `version`, the three
+hashes, `status` and the list of `chunk_ids` that are live in the index, plus an
+**index fingerprint** for the whole table (section 9).
 
 ### What is deliberately not supported
 
@@ -210,10 +219,8 @@ the list of `chunk_ids` that are live in the index — this is the version regis
   are deleted. Historical versions live in git, not in the index. Supporting several
   live versions (e.g. "the 2025 price list") would require `version` as a filter and a
   different id/manifest key.
-- **`version` is not validated against the hash.** An author can change the content and
-  forget to bump `version`; the index will still be correct (the hash drives it), but
-  the citation will show the old label. A CI check "hash changed ⇒ version changed" is
-  a natural extension.
+- **The editorial check is local.** "Body changed ⇒ version bumped" is compared against
+  the local manifest; a CI check against the Git base branch is a natural extension.
 
 ---
 
@@ -445,23 +452,32 @@ versions that keep being retrieved.
 
 ### Structure
 
-**Hash** — `document_hash(raw)` = SHA-256 of the full file text, front matter
-included, computed in `ingest.load_document()` and copied into every chunk.
+**Hashes** — `body_hash`, `embedding_hash` and `metadata_hash` are computed per
+document in `ingest.chunk_document()` (section 4) and copied into every chunk.
 
-**Manifest** — `data/index_manifest.json`, written by `index.py` after a successful
-run:
+**Index fingerprint** — `index_fingerprint()` = hash of the embedding model, the table
+name and the manifest format. Vectors from different models cannot share a table, so a
+different fingerprint (or an older manifest format) means **rebuild**. Chunking
+parameters are not part of it: they change the chunk texts, which `embedding_hash`
+already catches per document.
+
+**Manifest** — `data/index_manifest.json`, written atomically (temp file + rename) by
+`VersionRegistry.write()` after a successful run:
 
 ```json
 {
-  "pipeline": "rag-v1",
-  "indexed_at": "2026-07-20T14:03:11+00:00",
+  "format": 2,
+  "index_fingerprint": "ec49c1d4…",
+  "indexed_at": "2026-11-06T14:03:11+00:00",
   "sources": {
     "pro-plan.md": {
-      "document_hash": "3b1f…",
+      "version": "2026-01",
+      "body_hash": "a71c…",
+      "embedding_hash": "3b1f…",
+      "metadata_hash": "9e02…",
       "title": "Pro Plan",
       "tenant": "fcai",
       "product": "fcai-cloud",
-      "version": "2026-01",
       "status": "published",
       "chunk_ids": ["pro-plan-3b1f…-0000", "pro-plan-3b1f…-0001"]
     }
@@ -469,22 +485,27 @@ run:
 }
 ```
 
-**Diff** — `classify_sources()` groups current chunks by `source_file` and compares
-hashes with the manifest:
+**Diff** — `VersionRegistry.diff()` compares each current `DocumentVersion` with the
+manifest:
 
 ```mermaid
 flowchart TD
-    A[source in chunks.jsonl?] -->|yes| B{in manifest?}
+    F{fingerprint and format match,<br/>table exists?} -->|no| RB[rebuild table, everything is new]
+    F -->|yes| A[source in chunks.jsonl?]
+    A -->|yes| B{in manifest?}
     A -->|no, only in manifest| R[removed → delete manifest chunk_ids]
     B -->|no| N[new → add chunks]
-    B -->|yes| C{same document_hash?}
-    C -->|yes| U[unchanged → nothing, 0 embeddings]
+    B -->|yes| C{same embedding_hash?}
     C -->|no| CH[changed → delete old ids, add new chunks]
+    C -->|yes| M{same metadata_hash?}
+    M -->|no| MO[metadata_only → update JSON metadata, 0 embeddings]
+    M -->|yes| U[unchanged → nothing, 0 embeddings]
 ```
 
 **Apply** — one `store.delete(ids=…)` for removed + changed, one
-`store.add_documents(…, ids=chunk_ids)` for new + changed, then the manifest is
-rewritten from the current state.
+`store.add_documents(…, ids=chunk_ids)` for new + changed, one batched `UPDATE` of the
+`langchain_metadata` column for metadata-only, then the manifest is rewritten from the
+current state.
 
 **Idempotency properties**
 
@@ -492,8 +513,10 @@ rewritten from the current state.
 | --- | --- |
 | `index` twice in a row | second run: everything `unchanged`, no writes, no embeddings |
 | edit one document | only that document's chunks are replaced |
+| change only `status`/`visibility` | metadata updated in place, same ids, no embeddings |
+| change the embedding model | fingerprint differs → table rebuilt automatically |
 | delete a document, `ingest` + `index` | its chunks are deleted from the index |
-| no manifest, or table missing | state unknown → table recreated from scratch (`overwrite_existing=True`) |
+| no manifest, old manifest format, or table missing | state unknown → table recreated from scratch (`overwrite_existing=True`) |
 | `index --force` | delete every id in the manifest, re-add all current chunks |
 
 Deterministic ids are what make this safe: even if a run is interrupted after writing
@@ -507,9 +530,6 @@ offline step (`ingest` + `index`).
 
 - The manifest is a local file: it must travel with the database it describes (two
   developers sharing one database with separate manifests will disagree).
-- The `pipeline` field (`rag-v1`) is recorded but not compared; changing the chunking
-  parameters or the embedding model does **not** invalidate the manifest automatically
-  — use `--force`.
 - Delete and add are not in a single transaction.
 
 ---
@@ -541,9 +561,10 @@ stateDiagram-v2
    in `METADATA_SCHEMA`; ingestion fails if they are missing, so no document enters the
    index with an unknown state.
 2. **Approval is an edit to the document.** Changing `status: draft` →
-   `status: published` changes the file, therefore its `document_hash`, therefore its
-   chunk ids: the next `ingest` + `index` replaces the chunks with the approved ones.
-   Because the hash covers the front matter, a status-only change is never missed.
+   `status: published` changes the front matter, therefore its `metadata_hash`: the
+   next `ingest` + `index` classifies the document as `metadata_only` and updates the
+   stored metadata of its chunks in place (same ids, no embeddings — ADR 0012). A
+   status-only change is never missed.
 3. **Only published content is answerable.** `SAFE_FILTERS` contains
    `status: "published"` and is applied by `build_filters()` on **every** query. It is
    owned by the application: the planner cannot remove or change it, and nothing in the
@@ -586,8 +607,8 @@ request changing the document and its `status`), and every bundled document is
 
 - Validate `status`, `visibility`, `doc_type` and `plan` values at ingestion.
 - Use `visibility` as an application-owned filter tied to the caller's identity.
-- Store the chunking/embedding configuration in the manifest and force a rebuild when
-  it changes.
+- CI check "body changed ⇒ `version` bumped" against the Git base branch (today it is
+  checked against the local manifest).
 - Hybrid retrieval (BM25 + vectors) to complement `exact_terms`.
 - Multiple live versions per document (`version` as a filter) if historical answers
   are ever required.
