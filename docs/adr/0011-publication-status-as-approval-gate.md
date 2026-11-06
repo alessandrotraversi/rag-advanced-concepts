@@ -1,6 +1,6 @@
 # 0011. Publication status as the approval gate
 
-- **Status:** Accepted
+- **Status:** Accepted · Amended by [0012](0012-version-registry-with-split-hashes-and-index-fingerprint.md) (a status change updates metadata in place)
 - **Date:** 2026-07-14
 - **Code:** `app/metadata.py` (`METADATA_SCHEMA`, `STATUSES`), `app/query_planner.py` (`SAFE_FILTERS`, `build_filters`), `app/index.py` (`manifest_entry`), `app/retrieve.py` (`--status`)
 
