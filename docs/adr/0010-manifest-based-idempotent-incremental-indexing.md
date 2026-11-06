@@ -1,6 +1,6 @@
 # 0010. Manifest-based, idempotent incremental indexing
 
-- **Status:** Accepted
+- **Status:** Accepted · Amended by [0012](0012-version-registry-with-split-hashes-and-index-fingerprint.md) (index fingerprint, `metadata_only` state)
 - **Date:** 2026-07-14
 - **Code:** `app/manifest.py`, `app/index.py` (`classify_sources`, `manifest_entry`, `main`)
 
