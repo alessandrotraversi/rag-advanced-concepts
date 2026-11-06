@@ -1,6 +1,6 @@
 # 0003. Version chunks with content-addressed, deterministic ids
 
-- **Status:** Accepted
+- **Status:** Superseded by [0012](0012-version-registry-with-split-hashes-and-index-fingerprint.md)
 - **Date:** 2026-07-14
 - **Code:** `app/manifest.py` (`document_hash`), `app/ingest.py` (`chunk_id`), `app/index.py`
 
