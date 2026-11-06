@@ -10,6 +10,7 @@ from langchain_text_splitters import (
 )
 
 from app.metadata import SCHEMA, FieldContext, MetadataError, Scope
+from app.versioning import DocumentVersion, VersionRegistry
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_BASE_DIR = PROJECT_ROOT / "knowledge_base"
@@ -47,7 +48,7 @@ def load_document(path: Path) -> frontmatter.Post:
     if not post.content.strip():
         raise IngestionError(f"{path.name}: document body is empty")
 
-    # Document-level derived fields (e.g. document_hash).
+    # Document-level derived fields declared in app/metadata.py, if any.
     SCHEMA.resolve(Scope.DOCUMENT, FieldContext(path, post.metadata, raw=raw))
     return post
 
@@ -102,7 +103,41 @@ def chunk_document(
         ))
         chunks.append({"content": content, "metadata": metadata})
 
+    # The version needs every final chunk text (embedding_hash), so it is computed
+    # once the whole document is chunked and then stamped on each chunk (ADR 0012).
+    version = DocumentVersion.build(
+        path.name,
+        SCHEMA.front_matter(post.metadata),
+        post.content,
+        (chunk["content"] for chunk in chunks),
+    )
+    for chunk in chunks:
+        metadata = chunk["metadata"]
+        SCHEMA.resolve(Scope.VERSION, FieldContext(
+            path, metadata, index=metadata["chunk_index"], version=version
+        ))
+
     return chunks
+
+
+def check_editorial_versions(chunks: list[dict], strict: bool) -> None:
+    # The hashes catch every change on their own; this only protects the label that
+    # users see in citations from going stale when an author forgets to bump it.
+    versions = {
+        chunk["metadata"]["source_file"]: DocumentVersion.from_metadata(chunk["metadata"])
+        for chunk in chunks
+    }
+    stale = VersionRegistry.load().stale_editorial_versions(versions)
+    if not stale:
+        return
+    message = (
+        "body changed since the last index but 'version' was not bumped: "
+        + ", ".join(stale)
+    )
+    if strict:
+        print(f"Ingestion failed: {message}", file=sys.stderr)
+        raise SystemExit(1)
+    print(f"Warning: {message}", file=sys.stderr)
 
 
 def save_chunks(chunks: list[dict]) -> None:
@@ -125,6 +160,11 @@ def print_sample(chunks: list[dict]) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Ingest and chunk the knowledge base.")
     parser.add_argument("--no-context-header", action="store_true")
+    parser.add_argument(
+        "--strict-versions",
+        action="store_true",
+        help="fail if a document's body changed but its 'version' was not bumped",
+    )
     return parser.parse_args()
 
 
@@ -147,6 +187,8 @@ def main() -> None:
     for path, post in documents:
         chunks.extend(chunk_document(path, post, context_header=context_header))
     print(f"Generated chunks: {len(chunks)}")
+
+    check_editorial_versions(chunks, strict=args.strict_versions)
 
     save_chunks(chunks)
     print(f"Chunks saved to {OUTPUT_PATH.relative_to(PROJECT_ROOT)}")
